@@ -5,8 +5,10 @@
  */
 package co.unicauca.openmarket.domain.services;
 
+import co.unicauca.openmarket.commons.infra.JsonError;
 import co.unicauca.openmarket.server.access.IProductRepository;
 import co.unicauca.openmarket.server.domain.Product;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,30 +17,53 @@ import java.util.List;
  * @author brayan
  */
 public class ProductService {
-      private IProductRepository repository;
-         public ProductService(IProductRepository repository) {
-        this.repository = repository;
-    }
-         
-         
-             public List<Product> findAllProducts() {
-        List<Product> products = new ArrayList<>();
-        products = repository.findAll();
+ 
+    IProductRepository repo;
 
-        return products;
-    }
-    
-    public Product findProductById(Long id){
-        return repository.findById(id);
-    }
-    
-    public boolean deleteProduct(Long id){
-       return repository.delete(id);
+    /**
+     * Constructor parametrizado. Hace inyeccion de dependencias
+     *
+     * @param repo repositorio de tipo ICustomerRepository
+     */
+    public ProductService(IProductRepository repo) {
+        this.repo = repo;
     }
 
-    public boolean editProduct(Long productId, Product prod) {
+  
+    public synchronized Product findProduct(Long id) {
+        return repo.findById(id);
+    }
+    
+    /**
+     * Crea un nuevo customer.Aplica validaciones de negocio
+     *
+     * @param product
+     * @param customer cliente
+     * @return devuelve la cedula del customer creado
+     */
+    
+    public synchronized String createProduct(Product product) {
+        List<JsonError> errors = new ArrayList<>();
+  
+        // Validaciones y reglas de negocio
+        if (product.getProductId()==null || product.getDescription().isEmpty()) {
+           errors.add(new JsonError("400", "BAD_REQUEST","id y descripcion son obligatorios. "));
+        }
+      
+        // Que no esté repetido
+      
+        Product productSearched = this.findProduct(product.getProductId());
+        if (productSearched != null){
+            errors.add(new JsonError("400", "BAD_REQUEST","El producto ya existe. "));
+        }
         
-         return repository.edit(productId, prod, productId);
+       if (!errors.isEmpty()) {
+            Gson gson = new Gson();
+            String errorsJson = gson.toJson(errors);
+            return errorsJson;
+        }     
+       
+        return repo.createProduct(product);
     }
 
       

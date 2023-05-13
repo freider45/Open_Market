@@ -75,15 +75,11 @@ public class OpenMarketHandler extends ServerHandler  {
     private String processPostProduct(Protocol protocolRequest) {
         Product product = new Product();
         // Reconstruir el customer a partid de lo que viene en los parámetros
-        customer.setId(protocolRequest.getParameters().get(0).getValue());
-        customer.setFirstName(protocolRequest.getParameters().get(1).getValue());
-        customer.setLastName(protocolRequest.getParameters().get(2).getValue());
-        customer.setAddress(protocolRequest.getParameters().get(3).getValue());
-        customer.setEmail(protocolRequest.getParameters().get(4).getValue());
-        customer.setGender(protocolRequest.getParameters().get(5).getValue());
-        customer.setMobile(protocolRequest.getParameters().get(6).getValue());
-
-        String response = getService().createCustomer(customer);
+        product.setProductId(Long.valueOf(protocolRequest.getParameters().get(0).getValue()));
+        product.setName(protocolRequest.getParameters().get(1).getValue());
+        product.setDescription(protocolRequest.getParameters().get(2).getValue());
+    
+        String response = getService().createCustomer(product);
         return response;
     }
 
@@ -97,7 +93,7 @@ public class OpenMarketHandler extends ServerHandler  {
         JsonError error = new JsonError();
         error.setCode("404");
         error.setError("NOT_FOUND");
-        error.setMessage("Cliente no encontrado. Cédula no existe");
+        error.setMessage("Producto no encontrado. Id no existe");
         errors.add(error);
 
         Gson gson = new Gson();
