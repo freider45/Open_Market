@@ -30,8 +30,18 @@ import java.util.logging.Logger;
 public class CategoryAccessImplSockets implements ICategoryAccess {
 
      private OpenMarketSocket mySocket;
+ 
+    public CategoryAccessImplSockets() {
+        mySocket = new OpenMarketSocket();
+    }
     
-    //private Connection conn;
+    /**
+     * Busca una Categoria. Utiliza socket para pedir el servicio al servidor
+     *
+     * @param id cedula del cliente
+     * @return Objeto Customer
+     * @throws Exception cuando no pueda conectarse con el servidor
+     */
 
     @Override
     public boolean save(Category newCategory) throws Exception  {
@@ -165,12 +175,12 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
      * @return devulve algo como:
      * {"resource":"category","action":"post","parameters":[{"name":"id","value":"1"},{"name":"name","value":"lacteos"},...}]}
      */
-    private String doSaveCategoryRequestJson(Category category) {
+    private String doCreateCategoryRequestJson(Category category) {
 
         Protocol protocol = new Protocol();
         protocol.setResource("category");
         protocol.setAction("post");
-       
+        protocol.addParameter("categoryId", String.valueOf(category.getCategoryId()));
         protocol.addParameter("name", category.getName());
        
         Gson gson = new Gson();
@@ -186,11 +196,11 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
     *
     * @param jsonCustomer objeto cliente en formato json
     */
-    private Category jsonToCategory(String jsonCustomer) {
+    private Category jsonToCategory(String jsonCategory) {
 
         Gson gson = new Gson();
-        Category customer = gson.fromJson(jsonCustomer, Category.class);
-        return customer;
+        Category category = gson.fromJson(jsonCategory, Category.class);
+        return category;
 
     }
 
