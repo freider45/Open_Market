@@ -5,12 +5,28 @@
  */
 package co.unicauca.openmarket.server.infra.tcpip;
 
-import co.unicauca.strategyserver.infra.ServerHandler;
+import co.unicauca.openmarket.server.access.ProductRepositoryImplArrays;
+import co.unicauca.openmarket.server.domain.services.ProductService;
+import co.unicauca.strategyserver.infra.ServerSocketMultiThread;
+import java.util.Scanner;
 
 /**
  *
  * @author brayan
  */
 public class OpenMarketServer {
-    
+     /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Ingrese el puerto de escucha");
+        int port = teclado.nextInt();
+        ServerSocketMultiThread myServer = new ServerSocketMultiThread(port);
+        OpenMarketHandler myHandler = new OpenMarketHandler();
+        myHandler.setService(new ProductService(new ProductRepositoryImplArrays()));
+        myServer.setServerHandler(myHandler);
+        myServer.startServer();
+    }
 }

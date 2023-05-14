@@ -91,10 +91,10 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
     public List<Product> findAll() {
         return products;
     }
-    
-     @Override
-    public Long createProduct(Product product) {
-        products.add(product);
-        return product.getProductId();
+
+    @Override
+    public boolean save(Product newProduct, Long categoryId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
 }

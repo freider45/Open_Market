@@ -37,27 +37,30 @@ public class ProductRepositoryImplMysql implements IProductRepository {
      * @return objeto customer, null si no lo encuentra
      */
     
-    @Override
-    public Long createProduct(Product newProduct) {
+     @Override
+    public boolean save(Product newProduct, Long categoryId) {
 
         try {
-            this.connect();
-            String sql = "INSERT INTO products ( id, name, description ) "
-                    + "VALUES (?, ?, ? )";
+            //Validate product
+            if (newProduct == null || newProduct.getName().isBlank()) {
+                return false;
+            }
+            //this.connect();
+
+            String sql = "INSERT INTO products ( name, description, categoryId ) "
+                    + "VALUES ( ?, ?, ? )";
+
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, newProduct.getProductId());
-            pstmt.setString(2, newProduct.getName());
-            pstmt.setString(3, newProduct.getDescription());
-//            pstmt.setLong(4, newProduct.getCategoryId());
+            pstmt.setString(1, newProduct.getName());
+            pstmt.setString(2, newProduct.getDescription());
+            pstmt.setLong(3, categoryId);
             pstmt.executeUpdate();
-            pstmt.close();
-            this.disconnect();
+            //this.disconnect();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-          return newProduct.getProductId();
-   
+        return false;
     }
 
     @Override

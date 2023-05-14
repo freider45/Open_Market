@@ -11,30 +11,76 @@ import co.unicauca.openmarket.client.domain.Product;
  */
 public class ProductService  {
       
-    private final IProductAccess access;
+    public ProductService(){
+    
+   }
+   
+    private IProductAccess repository;
 
     /**
-     * Constructor privado que evita que otros objetos instancien
-     * @param service implementacion de tipo IProductAccess
-     */
-    public ProductService(IProductAccess access) {
-        this.access = access;
-    }
-
-    /**
-     * Busca un producto en el servidor remoto
+     * Inyección de dependencias en el constructor. Ya no conviene que el mismo
+     * servicio cree un repositorio concreto
      *
-     * @param id identificador del producto
-     * @return Objeto tipo Product, null si no lo encuentra
-     * @throws java.lang.Exception la excepcio se lanza cuando no logra conexión
-     * con el servidor
+     * @param repository una clase hija de IProductAccess
      */
-    public Product findById(Long id) throws Exception {
-        return access.findById(id);
+    public ProductService(IProductAccess repository) {
+        this.repository = repository;
     }
     
-    public boolean createProduct(Product product, Long categoryId) throws Exception {
-        return access.createProduct(product, categoryId);
+
+    public boolean saveProduct(String name, String description,Long categoryId) throws Exception{
+        
+        Product newProduct = new Product();
+        newProduct.setName(name);
+        newProduct.setDescription(description);
+        newProduct.setCategoryId(categoryId);
+        
+        
+        //Validate product
+        if (newProduct.getName().isBlank() ) {
+            return false;
+        }
+
+        return repository.save(newProduct,categoryId);
+
+    }
+
+    public List<Product> findAllProducts() {
+        List<Product> products = new ArrayList<>();
+        products = repository.findAll();
+
+        return products;
+    }
+    
+    public Product findProductById(Long id) throws Exception{
+        return repository.findById(id);
+    }
+    public List<Product> findProductsByName(String name) {
+        List<Product> products = new ArrayList<>();
+        products = repository.findByName(name);
+
+        return products;
+    }
+    public List<Product> findProductsByCategory(String categoryName) {
+        List<Product> products = new ArrayList<>();
+        products = repository.findByCategory(categoryName);
+
+        return products;
+    }
+    public boolean deleteProduct(Long id){
+        
+        return repository.delete(id);
+       
+    }
+
+    public boolean editProduct(Long productId, Product prod,Long categoryId) {
+     
+        //Validate product
+        if (prod == null || prod.getName().isBlank() ) {
+            return false;
+        }
+        return repository.edit(productId, prod,categoryId);
+
     }
 
 }

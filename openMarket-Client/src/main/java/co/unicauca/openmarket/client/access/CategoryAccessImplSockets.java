@@ -43,7 +43,7 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
      * @throws Exception cuando no pueda conectarse con el servidor
      */
     @Override
-    public boolean createCategory(Category newCategory) throws Exception  {
+    public boolean save(Category newCategory) throws Exception  {
         boolean bandera=false;
         String jsonResponse = null;
         String requestJson = doCreateCategoryRequestJson(newCategory);

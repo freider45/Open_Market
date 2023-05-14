@@ -1,6 +1,6 @@
 co\unicauca\strategyserver\helpers\Utilities.class
+co\unicauca\strategyserver\infra\EchoServerExample$1.class
+co\unicauca\strategyserver\infra\ServerHandler.class
 co\unicauca\strategyserver\infra\EchoServerExample.class
 co\unicauca\strategyserver\infra\ServerSocketMultiThread.class
 co\unicauca\strategyserver\helpers\JsonError.class
-co\unicauca\strategyserver\infra\EchoServerExample$1.class
-co\unicauca\strategyserver\infra\ServerHandler.class

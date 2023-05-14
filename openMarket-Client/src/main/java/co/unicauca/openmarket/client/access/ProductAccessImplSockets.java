@@ -73,7 +73,7 @@ public class ProductAccessImplSockets implements IProductAccess {
      * @throws Exception error crear el producto
      */
     @Override
-    public boolean createProduct(Product newProduct, Long categoryId)throws Exception {
+    public boolean save (Product newProduct, Long categoryId)throws Exception {
         boolean bandera = false;
         String jsonResponse = null;
         String requestJson = doCreateProductRequestJson(newProduct);

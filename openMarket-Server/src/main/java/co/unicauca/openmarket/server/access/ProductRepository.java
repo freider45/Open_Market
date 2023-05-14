@@ -28,6 +28,31 @@ public class ProductRepository implements IProductRepository {
         initDatabase();
     }
 
+     @Override
+    public boolean save(Product newProduct, Long categoryId) {
+
+        try {
+            //Validate product
+            if (newProduct == null || newProduct.getName().isBlank()) {
+                return false;
+            }
+            //this.connect();
+
+            String sql = "INSERT INTO products ( name, description, categoryId ) "
+                    + "VALUES ( ?, ?, ? )";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newProduct.getName());
+            pstmt.setString(2, newProduct.getDescription());
+            pstmt.setLong(3, categoryId);
+            pstmt.executeUpdate();
+            //this.disconnect();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
 
     @Override
@@ -259,9 +284,5 @@ public class ProductRepository implements IProductRepository {
         return products;
     }
     
-    @Override
-    public Long createProduct(Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
 }
