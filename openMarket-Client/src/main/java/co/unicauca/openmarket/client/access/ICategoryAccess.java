@@ -10,19 +10,17 @@ import co.unicauca.openmarket.client.domain.Category;
 import java.util.List;
 
 
-
 /**
  *
  * @author brayan
  */
 public interface ICategoryAccess {
     
-   boolean save(Category newCategory)throws Exception;
+   boolean createCategory(Category newCategory)throws Exception;
    boolean edit(Long id, Category category);
    boolean delete(Long id);
-   Category findById(Long id);
+   Category findById(Long id)throws Exception;
    List<Category> findAll();
    public List<Category> findByName(String name);
-   //boolean clearCategories();
 
 }

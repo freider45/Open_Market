@@ -1,5 +1,7 @@
 package co.unicauca.openmarket.client.access;
 
+import co.unicauca.openmarket.commons.infra.Utilities;
+
 /**
  * Fabrica que se encarga de instanciar ProductAccessImplSockets o cualquier otro que
  se cree en el futuro.
@@ -33,33 +35,29 @@ public class Factory {
      * @param type cadena que indica qué tipo de clase hija debe instanciar
      * @return una clase hija de la abstracción IProductAccess
      */
-    public IProductAccess getRepository(String type) {
+    public IProductAccess getProductService() {
 
         IProductAccess result = null;
+        String type = Utilities.loadProperty("product.service");
 
         switch (type) {
             case "default":
                 result = new ProductAccessImplSockets();
                 break;
-                
         }
-
         return result;
-
     }
     
-        public ICategoryAccess getCatRepository(String type) {
+    
+    public ICategoryAccess getCategoryService() {
 
         ICategoryAccess result = null;
-
+        String type = Utilities.loadProperty("category.service");
         switch (type) {
             case "default":
                 result = new CategoryAccessImplSockets();
-                break;
-                
+                break;   
         }
-
         return result;
-
     }
 }
