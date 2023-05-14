@@ -1,7 +1,5 @@
 package co.unicauca.openmarket.client.domain.service;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import co.unicauca.openmarket.client.access.IProductAccess;
@@ -13,79 +11,30 @@ import co.unicauca.openmarket.client.domain.Product;
  */
 public class ProductService  {
       
-    // Ahora hay una dependencia de una abstracción, no es algo concreto,
-    // no sabe cómo está implementado.
-   public ProductService(){
-    
-   }
-   
-   
-    private IProductAccess repository;
+    private final IProductAccess access;
 
     /**
-     * Inyección de dependencias en el constructor. Ya no conviene que el mismo
-     * servicio cree un repositorio concreto
-     *
-     * @param repository una clase hija de IProductAccess
+     * Constructor privado que evita que otros objetos instancien
+     * @param service implementacion de tipo IProductAccess
      */
-    public ProductService(IProductAccess repository) {
-        this.repository = repository;
+    public ProductService(IProductAccess access) {
+        this.access = access;
+    }
+
+    /**
+     * Busca un producto en el servidor remoto
+     *
+     * @param id identificador del producto
+     * @return Objeto tipo Product, null si no lo encuentra
+     * @throws java.lang.Exception la excepcio se lanza cuando no logra conexión
+     * con el servidor
+     */
+    public Product findById(Long id) throws Exception {
+        return access.findById(id);
     }
     
-
-    public boolean saveProduct(String name, String description,Long categoryId) {
-        
-        Product newProduct = new Product();
-        newProduct.setName(name);
-        newProduct.setDescription(description);
-        newProduct.setCategoryId(categoryId);
-        
-        
-        //Validate product
-        if (newProduct.getName().isBlank() ) {
-            return false;
-        }
-
-        return repository.save(newProduct,categoryId);
-
-    }
-
-    public List<Product> findAllProducts() {
-        List<Product> products = new ArrayList<>();
-        products = repository.findAll();
-
-        return products;
-    }
-    
-    public Product findProductById(Long id){
-        return repository.findById(id);
-    }
-    public List<Product> findProductsByName(String name) {
-        List<Product> products = new ArrayList<>();
-        products = repository.findByName(name);
-
-        return products;
-    }
-    public List<Product> findProductsByCategory(String categoryName) {
-        List<Product> products = new ArrayList<>();
-        products = repository.findByCategory(categoryName);
-
-        return products;
-    }
-    public boolean deleteProduct(Long id){
-        
-        return repository.delete(id);
-       
-    }
-
-    public boolean editProduct(Long productId, Product prod,Long categoryId) {
-     
-        //Validate product
-        if (prod == null || prod.getName().isBlank() ) {
-            return false;
-        }
-        return repository.edit(productId, prod,categoryId);
-
+    public boolean createProduct(Product product, Long categoryId) throws Exception {
+        return access.createProduct(product, categoryId);
     }
 
 }

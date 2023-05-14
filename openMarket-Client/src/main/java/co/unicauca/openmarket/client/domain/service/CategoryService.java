@@ -13,50 +13,31 @@ import javax.swing.JOptionPane;
  */
 public class CategoryService {
     
-    
-    public CategoryService(){
-        
+    private final ICategoryAccess access;
+
+    /**
+     * Constructor privado que evita que otros objetos instancien
+     * @param service implementacion de tipo ICategoryAccess
+     */
+    public CategoryService(ICategoryAccess access) {
+        this.access = access;
     }
-    private ICategoryAccess repository;
-    
-    public CategoryService(ICategoryAccess repository){
-        this.repository=repository;
-    }
-    public boolean saveCategory (String name)throws Exception{
-        Category newCategory=new Category();
-        newCategory.setName(name);
-        if(newCategory.getName().isBlank()){
-            return false;
-        }
-        return repository.save(newCategory);
-    }
-    public boolean editCategory(Long categoryId,Category cat) {
-        
-        //Validate product
-        if(cat==null || cat.getName().isBlank()){
-            return false;
-        }
-      
-       
-        return repository.edit(categoryId,cat);
+
+    /**
+     * Busca una categoria en el servidor remoto
+     *
+     * @param id identificador de la categoria
+     * @return Objeto tipo Category, null si no lo encuentra
+     * @throws java.lang.Exception la excepcio se lanza cuando no logra conexión
+     * con el servidor
+     */
+    public Category findById(Long id) throws Exception {
+        return access.findById(id);
     }
     
-   public boolean deleteCategory(Long id){
-        return repository.delete(id);
-    }  
-    public Category findCategoryById(Long id)throws Exception{
-        return repository.findById(id);
+    public boolean createCategory(Category category) throws Exception {
+        return access.createCategory(category);
+
     }
-       public List<Category> findAllCategories(){
-        return repository.findAll();
-    }
-       
-       public List<Category> findCategoriesByName(String name)throws Exception{
-        return repository.findByName(name);
-    }
-       /*
-       public boolean clearCategories(){
-           return repository.clearCategories();
-       }*/
 }  
         
