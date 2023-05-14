@@ -1,4 +1,4 @@
-package co.unicauca.openmarket.client.domain;
+package co.unicauca.openmarket.commons.domain;
 
 /**
  *

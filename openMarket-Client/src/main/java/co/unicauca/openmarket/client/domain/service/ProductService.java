@@ -3,7 +3,7 @@ package co.unicauca.openmarket.client.domain.service;
 import java.util.ArrayList;
 import java.util.List;
 import co.unicauca.openmarket.client.access.IProductAccess;
-import co.unicauca.openmarket.client.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 
 /**
  *

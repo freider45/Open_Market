@@ -2,7 +2,7 @@
 package co.unicauca.openmarket.client.domain.service;
 
 import co.unicauca.openmarket.client.access.ICategoryAccess;
-import co.unicauca.openmarket.client.domain.Category;
+import co.unicauca.openmarket.commons.domain.Category;
 
 import java.util.List;
 import javax.swing.JOptionPane;

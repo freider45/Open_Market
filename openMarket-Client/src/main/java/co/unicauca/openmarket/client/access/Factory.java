@@ -30,12 +30,13 @@ public class Factory {
     }
 
     /**
-     * Método que crea una instancia concreta de la jerarquia IProductAccess
+     * Método que crea una instancia concreta de la jerarquia IProductRepository
      *
      * @param type cadena que indica qué tipo de clase hija debe instanciar
-     * @return una clase hija de la abstracción IProductAccess
+     * @return una clase hija de la abstracción IProductRepository
      */
-    public IProductAccess getProductService() {
+    
+    public IProductAccess getProductAccess() {
 
         IProductAccess result = null;
         String type = Utilities.loadProperty("product.service");
@@ -48,16 +49,17 @@ public class Factory {
         return result;
     }
     
-    
-    public ICategoryAccess getCategoryService() {
+    public ICategoryAccess getCategoryAccess() {
 
         ICategoryAccess result = null;
         String type = Utilities.loadProperty("category.service");
+
         switch (type) {
             case "default":
                 result = new CategoryAccessImplSockets();
-                break;   
+                break;
         }
         return result;
     }
+
 }

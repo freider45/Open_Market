@@ -1,9 +1,11 @@
 package co.unicauca.openmarket.client.presentation;
 
-import co.unicauca.openmarket.client.domain.Category;
-import co.unicauca.openmarket.client.domain.Product;
+import co.unicauca.openmarket.commons.domain.Category;
+import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
 import co.unicauca.openmarket.client.infra.Messages;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -326,15 +328,19 @@ public class GUIProducts extends javax.swing.JFrame {
     }
 
     private void addProduct() {
-        String name = txtName.getText().trim();
-        String description = txtDescription.getText().trim();
-        Long categoryId=Long.parseLong(this.txtCategory.getText());
-        if (productService.saveProduct(name, description, categoryId)) {
-            Messages.showMessageDialog("Se grabó con éxito", "Atención");
-            cleanControls();
-            stateInitial();
-        } else {
-            Messages.showMessageDialog("Error al grabar, lo siento mucho", "Atención");
+        try {
+            String name = txtName.getText().trim();
+            String description = txtDescription.getText().trim();
+            Long categoryId=Long.parseLong(this.txtCategory.getText());
+            if (productService.saveProduct(name, description, categoryId)) {
+                Messages.showMessageDialog("Se grabó con éxito", "Atención");
+                cleanControls();
+                stateInitial();
+            } else {
+                Messages.showMessageDialog("Error al grabar, lo siento mucho", "Atención");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

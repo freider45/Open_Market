@@ -29,10 +29,6 @@ public class ProductRepositoryImplMysql implements IProductRepository {
 
     }
 
-
-    
-
-
     @Override
     public List<Product> findAll() {
         List<Product> products = new ArrayList<>();

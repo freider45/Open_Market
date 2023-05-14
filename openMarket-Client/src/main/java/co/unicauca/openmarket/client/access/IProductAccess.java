@@ -2,7 +2,7 @@
 package co.unicauca.openmarket.client.access;
 
 
-import co.unicauca.openmarket.client.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 import java.util.List;
 
 

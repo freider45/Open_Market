@@ -1,7 +1,7 @@
 package co.unicauca.openmarket.client.access;
 
 
-import co.unicauca.openmarket.client.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.infra.OpenMarketSocket;
 import co.unicauca.openmarket.commons.infra.JsonError;
 import co.unicauca.openmarket.commons.infra.Protocol;

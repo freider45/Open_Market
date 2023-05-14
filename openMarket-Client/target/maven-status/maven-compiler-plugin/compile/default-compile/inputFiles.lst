@@ -2,9 +2,7 @@ C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\access\Factory.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\main\Main.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\presentation\GUICategoriesFind.java
-C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\domain\Location.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\domain\User.java
-C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\domain\Category.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\presentation\GUIProductsFind.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\infra\OpenMarketSocket.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\presentation\GUICategory.java
@@ -13,6 +11,5 @@ C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\access\IProductAccess.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\access\ProductAccessImplSockets.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\access\CategoryAccessImplSockets.java
-C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\domain\Product.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\access\ICategoryAccess.java
 C:\Users\fre90\Documents\Open_Market\openMarket-Client\src\main\java\co\unicauca\openmarket\client\domain\service\ProductService.java

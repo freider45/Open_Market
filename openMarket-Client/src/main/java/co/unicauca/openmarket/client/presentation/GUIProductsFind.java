@@ -5,7 +5,7 @@
  */
 package co.unicauca.openmarket.client.presentation;
 
-import co.unicauca.openmarket.client.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
 import java.util.List;
 import javax.swing.JOptionPane;

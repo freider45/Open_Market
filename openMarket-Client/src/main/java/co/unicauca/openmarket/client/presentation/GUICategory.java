@@ -5,7 +5,7 @@
  */
 package co.unicauca.openmarket.client.presentation;
 
-import co.unicauca.openmarket.client.domain.Category;
+import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.client.infra.Messages;
 import static co.unicauca.openmarket.client.infra.Messages.successMessage;
@@ -338,7 +338,7 @@ public class GUICategory extends javax.swing.JFrame {
         btnCerrar.setVisible(false);
         btnGrabar.setVisible(true);
         btnBuscar.setVisible(false);
-        txtId.setEnabled(false);
+        txtId.setEnabled(true);
         txtNombre.setEnabled(true);
      
     }

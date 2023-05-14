@@ -6,7 +6,7 @@
 package co.unicauca.openmarket.client.access;
 
 
-import co.unicauca.openmarket.client.domain.Category;
+import co.unicauca.openmarket.commons.domain.Category;
 import java.util.List;
 
 
