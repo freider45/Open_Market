@@ -10,17 +10,17 @@ import java.util.List;
  * @author Libardo, Julio
  */
 public interface IProductRepository {
-    boolean save(Product newProduct,Long categoryId);
+    String createProduct(Product newProduct);
     
-    boolean edit(Long id, Product product, Long categoryId);
+    String edit(Long id, Product product, Long categoryId);
     
     boolean delete(Long id);
     //Long createProduct(Product product);
     Product findById(Long id);
     
    List<Product> findByName(String pname);
-    List<Product> findByCategory(String categoryName);
-    List<Product> findAll();
+   List<Product> findByCategory(String categoryName);
+   List<Product> findAll();
     
 
 }

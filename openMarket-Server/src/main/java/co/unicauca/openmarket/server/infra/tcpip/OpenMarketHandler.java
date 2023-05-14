@@ -58,10 +58,9 @@ public class OpenMarketHandler extends ServerHandler  {
         // Extraer el  del primer parámetro
         Long id =  Long.valueOf(protocolRequest.getParameters().get(0).getValue());
        
-        Product product = this.service.findProductById(id);
+        Product product = service.findById(id);
         if (product == null) {
-            String errorJson = generateNotFoundErrorJson();
-            return errorJson;
+            return generateNotFoundErrorJson();
         } else {
             return objectToJSON(product);
         }
@@ -78,9 +77,8 @@ public class OpenMarketHandler extends ServerHandler  {
         product.setProductId(Long.valueOf(protocolRequest.getParameters().get(0).getValue()));
         product.setName(protocolRequest.getParameters().get(1).getValue());
         product.setDescription(protocolRequest.getParameters().get(2).getValue());
-    
-        String response = getService().createCustomer(product);
-        return response;
+
+        return getService().createProduct(product);
     }
 
     /**
@@ -97,9 +95,8 @@ public class OpenMarketHandler extends ServerHandler  {
         errors.add(error);
 
         Gson gson = new Gson();
-        String errorsJson = gson.toJson(errors);
 
-        return errorsJson;
+        return gson.toJson(errors);
     }
 
     /**

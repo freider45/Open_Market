@@ -1,7 +1,5 @@
 package co.unicauca.openmarket.server.access;
-import co.unicauca.openmarket.server.access.IProductRepository;
 import co.unicauca.openmarket.commons.domain.Product;
-//import co.unicauca.travelagency.commons.domain.Customer;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,7 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
 
     public ProductRepositoryImplArrays() {
         if (products == null) {
-            products = new ArrayList();
+            products = new ArrayList<>();
         }
 
         if (products.isEmpty()) {
@@ -38,13 +36,20 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
         products.add(new Product(4L, "Zanahoria", "1 libra", 10000));
     }
 
+
     @Override
-    public boolean edit(Long id, Product product, Long categoryId) {
-       if( this.delete(id)==true){
+    public String createProduct(Product newProduct) {
+       products.add(newProduct);
+        return newProduct.getProductId().toString();
+    }
+
+    @Override
+    public String edit(Long id, Product product, Long categoryId) {
+       if(this.delete(id)){
            products.add(product);
-           return true;
+           return product.getProductId().toString();
        }
-        return false;
+        return "";
     }
 
     @Override
@@ -92,9 +97,6 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
         return products;
     }
 
-    @Override
-    public boolean save(Product newProduct, Long categoryId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+
     
 }

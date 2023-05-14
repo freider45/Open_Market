@@ -8,8 +8,10 @@ package co.unicauca.openmarket.server.domain.services;
 import co.unicauca.openmarket.commons.infra.JsonError;
 import co.unicauca.openmarket.server.access.IProductRepository;
 import co.unicauca.openmarket.commons.domain.Product;
+import com.google.gson.Gson;
 //import com.google.gson.Gson;
 //import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,20 +31,34 @@ public class ProductService {
         this.repo = repo;
     }
 
-    /**
-     * Crea un nuevo customer.Aplica validaciones de negocio
-     *
-     * @param product
-     * @param customer cliente
-     * @return devuelve la cedula del customer creado
-     */
+
     
-    public synchronized boolean save(Product newProduct, Long categoryId) {
-        return repo.save(newProduct, categoryId);
+    public synchronized String createProduct(Product product) {
+        List<JsonError> errors = new ArrayList<>();
+
+        // Validaciones y reglas de negocio
+        if (product.getProductId()==null || product.getDescription().isEmpty()
+                || product.getName().isEmpty()) {
+            errors.add(new JsonError("400", "BAD_REQUEST","id, nombres, apellidos, email y género son obligatorios. "));
+        }
+
+        // Que no esté repetido
+
+        Product productSearched = this.findById(product.getProductId());
+        if (productSearched != null){
+            errors.add(new JsonError("400", "BAD_REQUEST","El producto ya existe. "));
+        }
+
+        if (!errors.isEmpty()) {
+            Gson gson = new Gson();
+            return gson.toJson(errors);
+        }
+
+        return repo.createProduct(product);
     }
     
-    public synchronized boolean edit(Long id, Product newPrduct, Long categoryId){
-        return repo.edit(id, newPrduct, categoryId);
+    public synchronized String edit(Long id, Product newProduct, Long categoryId){
+        return repo.edit(id, newProduct, categoryId);
     }
     
     public synchronized boolean delete(Long id){

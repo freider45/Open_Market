@@ -12,10 +12,10 @@ import java.util.List;
  *
  * @author fre90
  */
-public class CategoryRepositoryArrays implements ICategoryRepository{
+public class CategoryRepositoryImplArrays implements ICategoryRepository{
 
     private static List<Category> category;
-    public CategoryRepositoryArrays() {
+    public CategoryRepositoryImplArrays() {
         if (category == null){
             category = new ArrayList();
         }

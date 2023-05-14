@@ -2,8 +2,6 @@ package co.unicauca.openmarket.server.access;
 import co.unicauca.openmarket.commons.infra.Utilities;
 
 import co.unicauca.openmarket.commons.domain.Product;
-//import co.unicauca.travelagency.commons.domain.Customer;
-//import co.unicauca.travelagency.commons.infra.Utilities;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,38 +28,10 @@ public class ProductRepositoryImplMysql implements IProductRepository {
     public ProductRepositoryImplMysql() {
 
     }
-    /**
-     * Busca en la bd un customer
-     * @param newProduct
-     * @param id cedula
-     * @return objeto customer, null si no lo encuentra
-     */
+
+
     
-     @Override
-    public boolean save(Product newProduct, Long categoryId) {
 
-        try {
-            //Validate product
-            if (newProduct == null || newProduct.getName().isBlank()) {
-                return false;
-            }
-            //this.connect();
-
-            String sql = "INSERT INTO products ( name, description, categoryId ) "
-                    + "VALUES ( ?, ?, ? )";
-
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, newProduct.getName());
-            pstmt.setString(2, newProduct.getDescription());
-            pstmt.setLong(3, categoryId);
-            pstmt.executeUpdate();
-            //this.disconnect();
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
 
     @Override
     public List<Product> findAll() {
@@ -85,7 +55,7 @@ public class ProductRepositoryImplMysql implements IProductRepository {
             this.disconnect();
 
         } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         return products;
     }
@@ -119,16 +89,29 @@ public class ProductRepositoryImplMysql implements IProductRepository {
     }
 
     @Override
-    public boolean edit(Long id, Product product, Long categoryId) {
+    public String createProduct(Product newProduct) {
+        try {
+            this.connect();
+            String sql = "INSERT INTO products ( name, description ) "
+                    + "VALUES ( ?, ?)";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newProduct.getName());
+            pstmt.setString(2, newProduct.getDescription());
+            pstmt.executeUpdate();
+            pstmt.close();
+            this.disconnect();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return newProduct.getProductId().toString();
+    }
+
+    public String edit(Long id, Product product, Long categoryId) {
        
         try {
               this.connect();
-            //Validate product
-            if (id <= 0 || product == null) {
-                return false;
-            }
-            //this.connect();
-
             String sql = "UPDATE  products "
                     + "SET name=?, description=?, categoryId=? "
                     + "WHERE productId = ?";
@@ -137,27 +120,20 @@ public class ProductRepositoryImplMysql implements IProductRepository {
             pstmt.setString(1, product.getName());
             pstmt.setString(2, product.getDescription());
             pstmt.setLong(3, categoryId);
+            pstmt.setLong(4, id);
             pstmt.executeUpdate();
             pstmt.close();
             this.disconnect();
-            return true;
         } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        return product.getProductId().toString();
     }
 
     @Override
     public boolean delete(Long id) {
-       
         try {
               this.connect();
-            //Validate product
-            if (id <= 0) {
-                return false;
-            }
-            //this.connect();
-
             String sql = "DELETE FROM products "
                     + "WHERE productId = ?";
 
@@ -166,11 +142,11 @@ public class ProductRepositoryImplMysql implements IProductRepository {
             pstmt.executeUpdate();
             pstmt.close();
             this.disconnect();
-            return true;
         } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -199,7 +175,7 @@ public class ProductRepositoryImplMysql implements IProductRepository {
             this.disconnect();
 
         } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
         }
         return product;
     }
@@ -209,10 +185,10 @@ public class ProductRepositoryImplMysql implements IProductRepository {
         List<Product> products = new ArrayList<>();
       
         try {
+
               this.connect();
             String sql = "SELECT * FROM products"
                     + " WHERE name = ?";
-            //this.connect();
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, pname);
@@ -230,23 +206,12 @@ public class ProductRepositoryImplMysql implements IProductRepository {
             this.disconnect();
 
         } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return products;
     }
 
-    public void cleanDatabase() {
-        try {
-            String sql = "DELETE FROM products";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-  
     @Override
     public List<Product> findByCategory(String categoryName) {
         List<Product> products = new ArrayList<>();
@@ -282,7 +247,7 @@ public class ProductRepositoryImplMysql implements IProductRepository {
             this.disconnect();
 
         } catch (SQLException ex) {
-            Logger.getLogger(ProductRepository.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return products;
