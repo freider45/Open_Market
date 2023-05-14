@@ -213,8 +213,12 @@ public class GUIProducts extends javax.swing.JFrame {
             return;
         }
         if (addOption) {
-            //Agregar
-            addProduct();
+            try {
+                //Agregar
+                addProduct();
+            } catch (Exception ex) {
+                Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         } else {
             //Editar
@@ -327,6 +331,7 @@ public class GUIProducts extends javax.swing.JFrame {
         
     }
 
+<<<<<<< HEAD
     private void addProduct() {
         try {
             String name = txtName.getText().trim();
@@ -341,6 +346,18 @@ public class GUIProducts extends javax.swing.JFrame {
             }
         } catch (Exception ex) {
             Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
+=======
+    private void addProduct() throws Exception {
+        String name = txtName.getText().trim();
+        String description = txtDescription.getText().trim();
+        Long categoryId=Long.parseLong(this.txtCategory.getText());
+        if (productService.saveProduct(name, description, categoryId)) {
+            Messages.showMessageDialog("Se grabó con éxito", "Atención");
+            cleanControls();
+            stateInitial();
+        } else {
+            Messages.showMessageDialog("Error al grabar, lo siento mucho", "Atención");
+>>>>>>> 22b10d45f29264c4933e201f85d8edc9e339e3de
         }
     }
 

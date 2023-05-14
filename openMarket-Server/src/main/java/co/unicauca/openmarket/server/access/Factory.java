@@ -37,7 +37,7 @@ public class Factory {
      */
 
     public IProductRepository getRepository() {
-        String type = Utilities.loadProperty("customer.repository");
+        String type = Utilities.loadProperty("product.repository");
         if (type.isEmpty()) {
             type = "default";
         }
@@ -52,11 +52,10 @@ public class Factory {
                 break;
         }
         return result;
-
     }
     
     public ICategoryRepository getCatRepository() {
-        String type = Utilities.loadProperty("customer.repository");
+        String type = Utilities.loadProperty("category.repository");
         if (type.isEmpty()) {
             type = "default";
         }
@@ -70,8 +69,7 @@ public class Factory {
                 result = new CategoryRepositoryImplMysql();
                 break;
         }
-
         return result;
-
+        
     }
 }
