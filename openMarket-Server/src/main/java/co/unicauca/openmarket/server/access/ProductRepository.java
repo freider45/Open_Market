@@ -1,6 +1,6 @@
 package co.unicauca.openmarket.server.access;
 
-import co.unicauca.openmarket.server.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -244,7 +244,7 @@ public class ProductRepository implements IProductRepository {
                     newProduct.setProductId(productRs.getLong("productId"));
                     newProduct.setName(productRs.getString("name"));
                     newProduct.setDescription(productRs.getString("description"));
-                    newProduct.setPrice(productRs.getDouble("price"));
+                    //newProduct.setPrice(productRs.getDouble("price"));
                     products.add(newProduct);
                 }
             } else {

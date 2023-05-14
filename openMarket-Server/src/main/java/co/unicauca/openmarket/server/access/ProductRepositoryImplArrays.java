@@ -1,6 +1,6 @@
 package co.unicauca.openmarket.server.access;
 import co.unicauca.openmarket.server.access.IProductRepository;
-import co.unicauca.openmarket.server.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 //import co.unicauca.travelagency.commons.domain.Customer;
 import java.sql.Connection;
 import java.util.ArrayList;

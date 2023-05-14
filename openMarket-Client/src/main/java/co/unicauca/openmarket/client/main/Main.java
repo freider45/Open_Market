@@ -20,8 +20,8 @@ public class Main {
      */
     public static void main(String[] args) {
         
-       IProductAccess repository = Factory.getInstance().getRepository("default");
-        ICategoryAccess repository2 =  Factory.getInstance().getCatRepository("default");
+       IProductAccess repository = Factory.getInstance().getProductService();
+        ICategoryAccess repository2 =  Factory.getInstance().getCategoryService();
         ProductService productService = new ProductService(repository);
         CategoryService categoryService=new CategoryService(repository2);
         

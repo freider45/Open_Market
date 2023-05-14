@@ -6,8 +6,8 @@
 package co.unicauca.openmarket.server.infra.tcpip;
 
 import co.unicauca.openmarket.commons.infra.*;
-import co.unicauca.openmarket.domain.services.ProductService;
-import co.unicauca.openmarket.server.domain.Product;
+import co.unicauca.openmarket.server.domain.services.ProductService;
+import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.strategyserver.infra.ServerHandler;
 import com.google.gson.Gson;
 import java.util.ArrayList;

@@ -5,7 +5,7 @@
  */
 package co.unicauca.openmarket.server.access;
 
-import co.unicauca.openmarket.server.domain.Category;
+import co.unicauca.openmarket.commons.domain.Category;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

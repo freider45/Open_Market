@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.unicauca.openmarket.domain.services;
+package co.unicauca.openmarket.server.domain.services;
 
 import co.unicauca.openmarket.commons.infra.JsonError;
 import co.unicauca.openmarket.server.access.IProductRepository;
-import co.unicauca.openmarket.server.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +62,8 @@ public class ProductService {
             String errorsJson = gson.toJson(errors);
             return errorsJson;
         }     
-       
-        return repo.createProduct(product);
+        return null;
+        //return repo.createProduct(product);
     }
 
       

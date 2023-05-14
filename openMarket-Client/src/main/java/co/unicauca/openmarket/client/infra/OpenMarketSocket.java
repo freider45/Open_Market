@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author brayan
+ * @author Jorge
  */
 public class OpenMarketSocket {
     /**

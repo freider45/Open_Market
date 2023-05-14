@@ -1,7 +1,7 @@
 package co.unicauca.openmarket.server.access;
 import co.unicauca.openmarket.commons.infra.Utilities;
 
-import co.unicauca.openmarket.server.domain.Product;
+import co.unicauca.openmarket.commons.domain.Product;
 //import co.unicauca.travelagency.commons.domain.Customer;
 //import co.unicauca.travelagency.commons.infra.Utilities;
 import java.sql.Connection;
@@ -270,7 +270,7 @@ public class ProductRepositoryImplMysql implements IProductRepository {
                     newProduct.setProductId(productRs.getLong("productId"));
                     newProduct.setName(productRs.getString("name"));
                     newProduct.setDescription(productRs.getString("description"));
-                    newProduct.setPrice(productRs.getDouble("price"));
+                    //newProduct.setPrice(productRs.getDouble("price"));
                     products.add(newProduct);
                 }
             } 
