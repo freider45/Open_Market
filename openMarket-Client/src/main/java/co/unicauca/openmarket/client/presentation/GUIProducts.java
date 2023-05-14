@@ -4,6 +4,8 @@ import co.unicauca.openmarket.client.domain.Category;
 import co.unicauca.openmarket.client.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
 import co.unicauca.openmarket.client.infra.Messages;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -211,8 +213,12 @@ public class GUIProducts extends javax.swing.JFrame {
             return;
         }
         if (addOption) {
-            //Agregar
-            addProduct();
+            try {
+                //Agregar
+                addProduct();
+            } catch (Exception ex) {
+                Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         } else {
             //Editar
@@ -325,7 +331,7 @@ public class GUIProducts extends javax.swing.JFrame {
         
     }
 
-    private void addProduct() {
+    private void addProduct() throws Exception {
         String name = txtName.getText().trim();
         String description = txtDescription.getText().trim();
         Long categoryId=Long.parseLong(this.txtCategory.getText());

@@ -1,5 +1,7 @@
 package co.unicauca.openmarket.server.access;
 
+import co.unicauca.openmarket.commons.infra.Utilities;
+
 /**
  * Fabrica que se encarga de instanciar ProductRepository o cualquier otro que
  * se cree en el futuro.
@@ -33,32 +35,42 @@ public class Factory {
      * @param type cadena que indica qué tipo de clase hija debe instanciar
      * @return una clase hija de la abstracción IProductRepository
      */
-    public IProductRepository getRepository(String type) {
+    public IProductRepository getRepository() {
 
+        String type = Utilities.loadProperty("product.repository");
+        if (type.isEmpty()) {
+            type = "default";
+        }
         IProductRepository result = null;
 
         switch (type) {
             case "default":
-                result = new ProductRepository();
+                result = new ProductRepositoryImplArrays();
                 break;
-                
+            case "mysql":
+                result = new ProductRepositoryImplMysql();
+                break;
         }
 
         return result;
-
     }
     
-        public ICategoryRepository getCatRepository(String type) {
+        public ICategoryRepository getCatRepository() {
 
+        String type = Utilities.loadProperty("category.repository");
+        if (type.isEmpty()) {
+            type = "default";
+        }
         ICategoryRepository result = null;
 
         switch (type) {
             case "default":
-                result = new CategoryRepository();
+                result = new CategoryRepositoryImplArrays();
                 break;
-                
+            case "mysql":
+                // TODO CLASS (CategoryRepositoryImplMysql) result = new CategoryRepositoryImplMysql();
+                break;
         }
-
         return result;
 
     }
