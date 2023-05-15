@@ -148,18 +148,40 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
                 Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
                 throw new Exception(extractMessages(jsonResponse));
             } else {
-                //Encontró el product
-                List<Category> products = jsonToCategoryList(jsonResponse);
+                
+                List<Category> categories = jsonToCategoryList(jsonResponse);
                 Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, "Lo que va en el JSon: ("+jsonResponse.toString()+ ")");
-                return products;
+                return categories;
             }
         }
     }
     
     //TODO
     @Override
-    public List<Category> findByName(String name){
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Category> findByName(String cname)throws Exception{
+        String jsonResponse = null;
+        String requestJson = doFindCategoriesByNameRequestJson(cname);
+        System.out.println(cname);
+        try {
+            mySocket.connect();
+            jsonResponse = mySocket.sendRequest(requestJson);
+            mySocket.disconnect();
+        } catch (IOException ex) {
+            Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.SEVERE, "No hubo conexión con el servidor", ex);
+        }
+        if (jsonResponse == null) {
+            throw new Exception("No se pudo conectar con el servidor. Revise la red o que el servidor esté escuchando. ");
+        } else {
+            if (jsonResponse.contains("error")) {
+                //Devolvió algún error
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
+                throw new Exception(extractMessages(jsonResponse));
+            } else {
+                List<Category> categories = jsonToCategoryList(jsonResponse);
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, "Lo que va en el JSon: ("+jsonResponse.toString()+ ")");
+                return categories;
+            }
+        }
     }
     
     //Metodos adicionales
@@ -264,6 +286,19 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
 
         return requestJson;
     }
+    
+        private String doFindCategoriesByNameRequestJson(String cname) {
+         Protocol protocol = new Protocol();
+        protocol.setResource("category");
+        protocol.setAction("getListCategoryByName");
+        protocol.addParameter("categoryName", cname);
+        Gson gson = new Gson();
+        String requestJson = gson.toJson(protocol);
+
+        return requestJson;
+    }
+        
+
 
     
 }

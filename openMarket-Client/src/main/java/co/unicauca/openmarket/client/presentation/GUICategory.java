@@ -9,6 +9,8 @@ import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.client.infra.Messages;
 import static co.unicauca.openmarket.client.infra.Messages.successMessage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -232,8 +234,12 @@ public class GUICategory extends javax.swing.JFrame {
             addCategory();
 
         } else {
-            //Editar
-            editCategory();
+             try {
+                 //Editar
+                 editCategory();
+             } catch (Exception ex) {
+                 Logger.getLogger(GUICategory.class.getName()).log(Level.SEVERE, null, ex);
+             }
         }
     }//GEN-LAST:event_btnGrabarActionPerformed
 
@@ -246,14 +252,18 @@ public class GUICategory extends javax.swing.JFrame {
             return;
            }
            if (Messages.showConfirmDialog("Está seguro que desea eliminar esta Categoria?", "Confirmación") == JOptionPane.YES_NO_OPTION) {
-                if(categoryService.deleteCategory(Long.valueOf(txtId.getText().trim()))){
-                      Messages.showMessageDialog("Categoria eliminada con exito", "Atención");
+               try {
+                   if(categoryService.deleteCategory(Long.valueOf(txtId.getText().trim()))){
+                       Messages.showMessageDialog("Categoria eliminada con exito", "Atención");
                        stateInitial();
                        cleanControls();
-                }else{
-                   Messages.showMessageDialog("Categoria no encontrada", "Error");
-                  
-                }
+                   }else{
+                       Messages.showMessageDialog("Categoria no encontrada", "Error");
+                       
+                   }
+               } catch (Exception ex) {
+                   Logger.getLogger(GUICategory.class.getName()).log(Level.SEVERE, null, ex);
+               }
            }
            
     }//GEN-LAST:event_btnEliminarActionPerformed
@@ -366,7 +376,7 @@ public class GUICategory extends javax.swing.JFrame {
      
     }
     //editar categorias
-    private void editCategory() {
+    private void editCategory() throws Exception {
         String id=this.txtId.getText().trim();
         if(id.equals("")){
             Messages.showMessageDialog("Debe buscar el producto a editar","Atencion");

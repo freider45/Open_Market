@@ -30,7 +30,7 @@ public class CategoryService {
         }
         return repository.save(newCategory);
     }
-    public boolean editCategory(Long categoryId,Category cat) {
+    public boolean editCategory(Long categoryId,Category cat) throws Exception {
         
         //Validate product
         if(cat==null || cat.getName().isBlank()){
@@ -41,13 +41,13 @@ public class CategoryService {
         return repository.edit(categoryId,cat);
     }
     
-    public boolean deleteCategory(Long id){
+    public boolean deleteCategory(Long id) throws Exception{
         return repository.delete(id);
     }  
     public Category findCategoryById(Long id)throws Exception{
         return repository.findById(id);
     }
-       public List<Category> findAllCategories(){
+       public List<Category> findAllCategories() throws Exception{
         return repository.findAll();
     }
        

@@ -5,6 +5,8 @@
 package co.unicauca.openmarket.server.access;
 
 import co.unicauca.openmarket.commons.domain.Category;
+import co.unicauca.openmarket.commons.domain.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,33 +16,33 @@ import java.util.List;
  */
 public class CategoryRepositoryImplArrays implements ICategoryRepository{
 
-    private static List<Category> category;
+    private static List<Category> categories;
     public CategoryRepositoryImplArrays() {
-        if (category == null){
-            category = new ArrayList();
+        if (categories == null){
+            categories = new ArrayList<>();
         }
         
-        if (category.size() == 0){
+        if (categories.size() == 0){
            inicializar();
         }
     }
    
     public void inicializar() {
-        category.add(new Category(1L, "Bebidas"));
-        category.add(new Category(2L, "Lacteos"));
-        category.add(new Category(3L, "Carnicos"));
+        categories.add(new Category(1L, "Bebidas"));
+        categories.add(new Category(2L, "Lacteos"));
+        categories.add(new Category(3L, "Carnicos"));
     }
     @Override
     public boolean save(Category newCategory) {
-        category.add(newCategory);
+        categories.add(newCategory);
         return true;
     }
 
     @Override
     public boolean edit(Long id, Category prmCategory) {
-       for (int i = 0; i < category.size(); i++) {
-            if (category.get(i).getCategoryId().equals(id)) {
-                category.set(i, prmCategory);
+       for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getCategoryId().equals(id)) {
+                categories.set(i, prmCategory);
                 return true;
             }
         }
@@ -50,9 +52,9 @@ public class CategoryRepositoryImplArrays implements ICategoryRepository{
 
     @Override
     public boolean delete(Long id) {
-       for (int i = 0; i < category.size(); i++) {
-            if (category.get(i).getCategoryId().equals(id)) {
-                category.remove(i);
+       for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getCategoryId().equals(id)) {
+                categories.remove(i);
                 return true;
             }
         }
@@ -62,7 +64,7 @@ public class CategoryRepositoryImplArrays implements ICategoryRepository{
 
     @Override
     public Category findById(Long id) {
-       for (Category OCategory : category) {
+       for (Category OCategory : categories) {
             if (OCategory.getCategoryId().equals(id)) {
                 return OCategory;
             }
@@ -72,14 +74,20 @@ public class CategoryRepositoryImplArrays implements ICategoryRepository{
 
     @Override
     public List<Category> findAll() {
-        if (category.isEmpty())
+        if (categories.isEmpty())
             return null;      
-        return category;
+        return categories;
     }
 
     @Override
     public List<Category> findByName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Category> listaCategorias = new ArrayList<>();
+        for (Category category : categories) {
+            if (category.getName().equals(name)) {
+                listaCategorias.add(category);
+            }
+        }
+        return listaCategorias;
     }
     
 }

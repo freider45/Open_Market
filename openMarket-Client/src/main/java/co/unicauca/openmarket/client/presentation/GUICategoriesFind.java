@@ -10,6 +10,8 @@ import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.client.domain.service.CategoryService;
 import static co.unicauca.openmarket.client.infra.Messages.successMessage;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -63,20 +65,7 @@ public class GUICategoriesFind extends javax.swing.JDialog {
        
         model.addRow(rowData);  
     }
-    private void fillTableName(List<Category> listCategories) {
-        initializeTable();
-        DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 
-        Object rowData[] = new Object[2];//No columnas
-        for (int i = 0; i < listCategories.size(); i++) {
-            rowData[0] = listCategories.get(i).getCategoryId();
-               
-            rowData[1] = listCategories.get(i).getName();
-
-            
-            model.addRow(rowData);
-        }
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -186,18 +175,20 @@ public class GUICategoriesFind extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnSearchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchAllActionPerformed
-        fillTable( categoryService.findAllCategories());
+        try {
+            fillTable( categoryService.findAllCategories());
+        } catch (Exception ex) {
+            Logger.getLogger(GUICategoriesFind.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnSearchAllActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
           try{
-               if(this.rdoId.isSelected()==true){
-                   
+               if(this.rdoId.isSelected()==true){           
                        fillTableId(categoryService.findCategoryById(Long.valueOf(this.txtSearch.getText())) );
-                  
-                        
-                 }else{
-                   fillTableName (categoryService.findCategoriesByName(this.txtSearch.getText())); 
+
+                 }else if (this.rdoName.isSelected()==true){
+                   fillTable(categoryService.findCategoriesByName(this.txtSearch.getText().trim())); 
              }
           }catch(NullPointerException ex){
                 JOptionPane.showMessageDialog(null,
