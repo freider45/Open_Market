@@ -28,9 +28,10 @@ public class ProductService  {
     }
     
 
-    public boolean saveProduct(String name, String description,Long categoryId) throws Exception{
+    public boolean saveProduct(Long id,String name, String description,Long categoryId) throws Exception{
         
         Product newProduct = new Product();
+        newProduct.setProductId(id);
         newProduct.setName(name);
         newProduct.setDescription(description);
         newProduct.setCategoryId(categoryId);

@@ -193,7 +193,7 @@ public class GUIProducts extends javax.swing.JFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         stateNew();
-        txtName.requestFocus();
+        txtId.requestFocus();
         addOption = true;
     }//GEN-LAST:event_btnNuevoActionPerformed
 
@@ -266,7 +266,6 @@ public class GUIProducts extends javax.swing.JFrame {
         btnCerrar.setVisible(false);
         btnSave.setVisible(true);
         btnFind.setVisible(false);
-        txtId.setEnabled(true);
         txtName.setEnabled(true);
         txtDescription.setEnabled(true);
         txtCategory.setEnabled(true);
@@ -316,7 +315,7 @@ public class GUIProducts extends javax.swing.JFrame {
         btnCerrar.setVisible(false);
         btnSave.setVisible(true);
         btnFind.setVisible(false);
-        txtId.setEnabled(false);
+         txtId.setEnabled(true);
         txtName.setEnabled(true);
         txtDescription.setEnabled(true);
         txtCategory.setEnabled(true);
@@ -333,10 +332,11 @@ public class GUIProducts extends javax.swing.JFrame {
 
     private void addProduct() {
         try {
+            String id= txtId.getText().trim();
             String name = txtName.getText().trim();
             String description = txtDescription.getText().trim();
-            Long categoryId=Long.parseLong(this.txtCategory.getText());
-            if (productService.saveProduct(name, description, categoryId)) {
+            Long categoryId=Long.valueOf(this.txtCategory.getText());
+            if (productService.saveProduct(Long.valueOf(id),name, description, categoryId)) {
                 Messages.showMessageDialog("Se grabó con éxito", "Atención");
                 cleanControls();
                 stateInitial();

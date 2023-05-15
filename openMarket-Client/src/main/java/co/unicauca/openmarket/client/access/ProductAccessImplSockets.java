@@ -66,8 +66,10 @@ public class ProductAccessImplSockets implements IProductAccess {
     }
 
     /**
-     * Crea un Product. Utiliza socket para pedir el servicio al servidor
+     * Crea un Product.Utiliza socket para pedir el servicio al servidor
      *
+     * @param newProduct
+     * @param categoryId
      * @param product producto de la tienda
      * @return devuelve verdadero
      * @throws Exception error crear el producto

@@ -352,7 +352,7 @@ public class GUICategory extends javax.swing.JFrame {
     private void addCategory() {
         try{
             String name=this.txtNombre.getText().trim();
-            Long id=Long.parseLong(this.txtId.getText());
+            Long id=Long.valueOf(this.txtId.getText());
             if(categoryService.saveCategory(id, name)){
                 Messages.showMessageDialog("Se grabo con exito","Atencion");
                 cleanControls();

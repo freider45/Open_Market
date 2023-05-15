@@ -42,7 +42,8 @@ public class OpenMarketHandler extends ServerHandler {
                 }
 
                 if (protocolRequest.getAction().equals("post")) {
-                    // Agregar un customer    
+                    // Agregar un customer
+                    System.out.println("POST PRODUCT");
                     response = processPostProduct(protocolRequest);
                 }
                 if (protocolRequest.getAction().equals("edit")) {
@@ -130,7 +131,9 @@ public class OpenMarketHandler extends ServerHandler {
         product.setName(protocolRequest.getParameters().get(1).getValue());
         product.setDescription(protocolRequest.getParameters().get(2).getValue());
 
-        return getProductService().createProduct(product);
+        getProductService().createProduct(product);
+
+        return objectToJSON(product);
     }
 
     private String processGetCategory(Protocol protocolRequest) {
