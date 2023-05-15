@@ -22,9 +22,10 @@ public class GUIProducts extends javax.swing.JFrame {
     /**
      * Creates new form GUIProducts
      */
-    public GUIProducts(ProductService productService) {
+    public GUIProducts(ProductService productService,CategoryService categoryService ) {
         initComponents();
         this.productService = productService;
+        this.categoryService=categoryService;
         stateInitial();
 
     }
@@ -289,7 +290,7 @@ public class GUIProducts extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
-        GUIProductsFind instance = new GUIProductsFind(this, true, productService);
+        GUIProductsFind instance = new GUIProductsFind(this, true, productService,categoryService);
         instance.setVisible(true);
     }//GEN-LAST:event_btnFindActionPerformed
 
@@ -454,14 +455,15 @@ public class GUIProducts extends javax.swing.JFrame {
         }
         if (!txtCategory.getText().isEmpty()) {
             try {
-                Category cat= categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
+             Category cat=   this.categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
                 prod.setCategoryId(cat.getCategoryId());
             } catch (Exception e) {
                   JOptionPane.showMessageDialog(null,
-                "El id de categoria no existe, por favor ingrese una categoria valida",
+                e.getMessage(),
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
                  prod=null;
+                System.out.println(e.getMessage());
                 return;
             }
             prod.setCategoryId(Long.valueOf(txtCategory.getText()));

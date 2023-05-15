@@ -27,11 +27,12 @@ public class GUIProductsFind extends javax.swing.JDialog {
     /**
      * Creates new form GUIProductsFind
      */
-    public GUIProductsFind(java.awt.Frame parent, boolean modal, ProductService productService) {
+    public GUIProductsFind(java.awt.Frame parent, boolean modal, ProductService productService,CategoryService categoryService) {
         super(parent, modal);
         initComponents();
         initializeTable();
         this.productService = productService;
+        this.categoryService=categoryService;
         setLocationRelativeTo(null); //centrar al ventana
     }
 

@@ -213,7 +213,7 @@ public class GUICategory extends javax.swing.JFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
          stateNew();
-        this.txtNombre.requestFocus();
+        this.txtId.requestFocus();
         addOption = true;
     }//GEN-LAST:event_btnNuevoActionPerformed
 

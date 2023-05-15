@@ -31,7 +31,7 @@ public class Main {
         instance1.setVisible(true);
         instance1.setSize(595, 380);
         instance1.setLocation(0,0);
-        GUIProducts instance2 = new GUIProducts(productService);
+        GUIProducts instance2 = new GUIProducts(productService,categoryService);
         instance2.setVisible(true);
          instance2.setLocation(590, 0);
     }
