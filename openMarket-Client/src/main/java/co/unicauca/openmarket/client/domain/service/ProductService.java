@@ -1,8 +1,9 @@
 package co.unicauca.openmarket.client.domain.service;
 
+
+import co.unicauca.openmarket.client.access.IProductAccess;
 import java.util.ArrayList;
 import java.util.List;
-import co.unicauca.openmarket.client.access.IProductAccess;
 import co.unicauca.openmarket.commons.domain.Product;
 
 /**
@@ -46,38 +47,38 @@ public class ProductService  {
 
     }
 
-    public List<Product> findAllProducts() {
+    public List<Product> findAllProducts() throws Exception  {
         List<Product> products = new ArrayList<>();
         products = repository.findAll();
 
         return products;
     }
     
-    public Product findProductById(Long id) throws Exception{
+    public Product findProductById(Long id) throws Exception {
         return repository.findById(id);
     }
-    public List<Product> findProductsByName(String name) {
+    public List<Product> findProductsByName(String name) throws Exception  {
         List<Product> products = new ArrayList<>();
         products = repository.findByName(name);
 
         return products;
     }
-    public List<Product> findProductsByCategory(String categoryName) {
+    public List<Product> findProductsByCategory(String categoryName) throws Exception {
         List<Product> products = new ArrayList<>();
         products = repository.findByCategory(categoryName);
 
         return products;
     }
-    public boolean deleteProduct(Long id){
+    public boolean deleteProduct(Long id) throws Exception{
         
         return repository.delete(id);
        
     }
 
-    public boolean editProduct(Long productId, Product prod,Long categoryId) {
+    public boolean editProduct(Long productId, Product prod,Long categoryId) throws Exception {
      
         //Validate product
-        if (prod == null || prod.getName().isBlank() ) {
+        if (prod == null || prod.getName().isBlank() || prod.getDescription().isBlank() ) {
             return false;
         }
         return repository.edit(productId, prod,categoryId);

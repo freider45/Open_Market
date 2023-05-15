@@ -39,14 +39,16 @@ public class OpenMarketHandler extends ServerHandler {
                 if (protocolRequest.getAction().equals("get")) {
                     response = processGetProduct(protocolRequest);
                 }
+                if (protocolRequest.getAction().equals("deleteProduct")) {
+                    response = String.valueOf(processDeleteProduct(protocolRequest));
+                }
 
                 if (protocolRequest.getAction().equals("post")) {
-                    System.out.println("POST PRODUCT");
                     response = processPostProduct(protocolRequest);
                 }
                 if (protocolRequest.getAction().equals("getListProducts")) {
 
-//                    response = processGetListProductos(protocolRequest);
+                    response = processGetListProductos();
                 }
                 if (protocolRequest.getAction().equals("edit")) {
                     // Editar un producto
@@ -87,9 +89,24 @@ public class OpenMarketHandler extends ServerHandler {
 
     }
 
-//    private String processGetListProductos(Protocol protocolRequest) {
-//
-//    }
+    private String processDeleteProduct(Protocol protocolRequest) {
+        String productId = protocolRequest.getParameters().get(0).getValue();
+        System.out.println("borrado");
+        Product product = productService.findById(Long.valueOf(productId));
+        if (product == null) {
+            return generateNotFoundErrorJson();
+        }
+        getProductService().delete(Long.valueOf(productId));
+
+        return objectToJSON(true);
+
+    }
+
+    private String processGetListProductos() {
+        List<Product> products;
+        products = getProductService().findAll();
+        return objectToJSON(products);
+    }
 
     private String processEditProduct(Protocol protocolRequest) {
         Product producto = new Product();

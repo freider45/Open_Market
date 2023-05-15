@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 /**
  * Es una implementación que tiene libertad de hacer una implementación del
@@ -110,8 +112,33 @@ public class ProductAccessImplSockets implements IProductAccess {
     }
 
     @Override
-    public boolean delete(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean delete(Long productId)throws Exception {
+         boolean bandera = false;
+        String jsonResponse = null;
+        String requestJson = doDeleteProductRequestJson(productId);
+        try {
+            mySocket.connect();
+            jsonResponse = mySocket.sendRequest(requestJson);
+            mySocket.disconnect();
+
+        } catch (IOException ex) {
+            Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.SEVERE, "No hubo conexión con el servidor", ex);
+        }
+        if (jsonResponse == null) {
+            throw new Exception("No se pudo conectar con el servidor");
+        } else {
+
+            if (jsonResponse.contains("error")) {
+                //Devolvió algún error                
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
+                throw new Exception(extractMessages(jsonResponse));
+            } else {
+                //eliminó correctamente, devuelve verdadero 
+                bandera = true;
+            }
+
+        }
+        return bandera;
     }
 
     @Override
@@ -125,9 +152,33 @@ public class ProductAccessImplSockets implements IProductAccess {
     }
 
     @Override
-    public List<Product> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public List<Product> findAll() throws Exception {
+        String jsonResponse = null;
+        String requestJson = doFindAllProductsRequestJson();
+        System.out.println(requestJson);
+        try {
+            mySocket.connect();
+            jsonResponse = mySocket.sendRequest(requestJson);
+            mySocket.disconnect();
+
+        } catch (IOException ex) {
+            Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.SEVERE, "No hubo conexión con el servidor", ex);
+        }
+        if (jsonResponse == null) {
+            throw new Exception("No se pudo conectar con el servidor. Revise la red o que el servidor esté escuchando. ");
+        } else {
+            if (jsonResponse.contains("error")) {
+                //Devolvió algún error
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
+                throw new Exception(extractMessages(jsonResponse));
+            } else {
+                //Encontró el product
+                List<Product> products = jsonToProductList(jsonResponse);
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, "Lo que va en el JSon: ("+jsonResponse.toString()+ ")");
+                return products;
+            }
+        }
+      }
     
     
     //Metodos adicionales
@@ -181,6 +232,19 @@ public class ProductAccessImplSockets implements IProductAccess {
     }
     
     
+        private String doFindAllProductsRequestJson() {
+
+        Protocol protocol = new Protocol();
+        protocol.setResource("product");
+        protocol.setAction("getListProducts");
+
+        Gson gson = new Gson();
+        String requestJson = gson.toJson(protocol);
+
+        return requestJson;
+    }
+    
+    
     /**
      * Crea la solicitud json de creación del product para ser enviado por el
      * socket
@@ -202,6 +266,18 @@ public class ProductAccessImplSockets implements IProductAccess {
         String requestJson = gson.toJson(protocol);
         return requestJson;
     }
+    
+        private String doDeleteProductRequestJson(Long productId) {
+
+        Protocol protocol = new Protocol();
+        protocol.setResource("product");
+        protocol.setAction("deleteProduct");
+        protocol.addParameter("productId", productId.toString());
+
+        Gson gson = new Gson();
+        String requestJson = gson.toJson(protocol);
+        return requestJson;
+    }
 
     
     /**
@@ -217,5 +293,13 @@ public class ProductAccessImplSockets implements IProductAccess {
         return product;
 
     }
+    
+    private List<Product> jsonToProductList(String jsonProductList) {
+       Gson gson = new Gson();
+       Type productListType = new TypeToken<List<Product>>(){}.getType();
+       List<Product> productList = gson.fromJson(jsonProductList, productListType);
+       return productList;
+   }
+
 
 }

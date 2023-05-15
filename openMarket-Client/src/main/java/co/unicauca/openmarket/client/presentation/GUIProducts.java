@@ -44,6 +44,7 @@ public class GUIProducts extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnFind = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
+        btnBorrarProducto = new javax.swing.JButton();
         pnlCenter = new javax.swing.JPanel();
         lblId = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -116,6 +117,14 @@ public class GUIProducts extends javax.swing.JFrame {
         });
         pnlSouth.add(btnCerrar);
 
+        btnBorrarProducto.setText("Borrar producto");
+        btnBorrarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarProductoActionPerformed(evt);
+            }
+        });
+        pnlSouth.add(btnBorrarProducto);
+
         getContentPane().add(pnlSouth, java.awt.BorderLayout.SOUTH);
 
         pnlCenter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -156,7 +165,7 @@ public class GUIProducts extends javax.swing.JFrame {
                     .addComponent(txtName)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                     .addComponent(txtCategory))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
         );
         pnlCenterLayout.setVerticalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,8 +230,12 @@ public class GUIProducts extends javax.swing.JFrame {
             }
 
         } else {
-            //Editar
-            editProduct();
+            try {
+                //Editar
+                editProduct();
+            } catch (Exception ex) {
+                Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -234,19 +247,28 @@ public class GUIProducts extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+
         String id = txtId.getText().trim();
         if (id.equals("")) {
             Messages.showMessageDialog("Debe buscar el producto a eliminar", "Atención");
             txtId.requestFocus();
             return;
         }
-        Long productId = Long.parseLong(id);
+        Long productId = Long.valueOf(id);
         if (Messages.showConfirmDialog("Está seguro que desea eliminar este producto?", "Confirmación") == JOptionPane.YES_NO_OPTION) {
-            if (productService.deleteProduct(productId)) {
-                Messages.showMessageDialog("Producto eliminado con éxito", "Atención");
-                stateInitial();
-                cleanControls();
+        
+            try {
+                if (productService.deleteProduct(productId) ) {
+                    Messages.showMessageDialog("Producto eliminado con éxito", "Atención");
+                    stateInitial();
+                    cleanControls();
+                }
+            } catch (Exception ex) {
+                Messages.showMessageDialog("El id del producto no existe", "Error");
+                Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
+                
             }
+         
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -258,10 +280,16 @@ public class GUIProducts extends javax.swing.JFrame {
     private void txtCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCategoryActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCategoryActionPerformed
+
+    private void btnBorrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarProductoActionPerformed
+        addOption = false;
+        stateDelete();
+        txtId.requestFocus();
+        
+    }//GEN-LAST:event_btnBorrarProductoActionPerformed
     private void stateEdit() {
         btnNuevo.setVisible(false);
         btnEditar.setVisible(false);
-        btnEliminar.setVisible(true);
         btnCancelar.setVisible(true);
         btnCerrar.setVisible(false);
         btnSave.setVisible(true);
@@ -269,12 +297,15 @@ public class GUIProducts extends javax.swing.JFrame {
         txtName.setEnabled(true);
         txtDescription.setEnabled(true);
         txtCategory.setEnabled(true);
+        txtId.setEnabled(true);
+        btnBorrarProducto.setVisible(false);
     }
 
     private void stateInitial() {
         btnNuevo.setVisible(true);
         btnEditar.setVisible(true);
         btnEliminar.setVisible(false);
+        btnBorrarProducto.setVisible(true);
         btnCancelar.setVisible(false);
         btnCerrar.setVisible(true);
         btnSave.setVisible(false);
@@ -287,6 +318,7 @@ public class GUIProducts extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBorrarProducto;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnEditar;
@@ -319,6 +351,8 @@ public class GUIProducts extends javax.swing.JFrame {
         txtName.setEnabled(true);
         txtDescription.setEnabled(true);
         txtCategory.setEnabled(true);
+        btnBorrarProducto.setVisible(false);
+       
 
     }
 
@@ -348,7 +382,7 @@ public class GUIProducts extends javax.swing.JFrame {
         }
     }
 
-    private void editProduct() {
+    private void editProduct() throws Exception {
         String id = txtId.getText().trim();
         if (id.equals("")) {
             Messages.showMessageDialog("Debe buscar el producto a editar", "Atención");
@@ -368,5 +402,20 @@ public class GUIProducts extends javax.swing.JFrame {
         } else {
             Messages.showMessageDialog("Error al editar, lo siento mucho", "Atención");
         }
+    }
+
+    private void stateDelete() {
+        btnNuevo.setVisible(false);
+        btnEditar.setVisible(false);
+        btnEliminar.setVisible(true);
+        btnCancelar.setVisible(true);
+        btnBorrarProducto.setVisible(false);
+        btnCerrar.setVisible(false);
+        btnSave.setVisible(false);
+        btnFind.setVisible(false);
+         txtId.setEnabled(true);
+        txtName.setEnabled(false);
+        txtDescription.setEnabled(false);
+        txtCategory.setEnabled(false);
     }
 }
