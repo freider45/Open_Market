@@ -8,14 +8,14 @@ package co.unicauca.openmarket.server.infra.tcpip;
 import co.unicauca.openmarket.server.access.ProductRepositoryImplArrays;
 import co.unicauca.openmarket.server.domain.services.ProductService;
 import co.unicauca.strategyserver.infra.ServerSocketMultiThread;
+
 import java.util.Scanner;
 
 /**
- *
  * @author brayan
  */
 public class OpenMarketServer {
-     /**
+    /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -25,7 +25,7 @@ public class OpenMarketServer {
         int port = teclado.nextInt();
         ServerSocketMultiThread myServer = new ServerSocketMultiThread(port);
         OpenMarketHandler myHandler = new OpenMarketHandler();
-        myHandler.setService(new ProductService(new ProductRepositoryImplArrays()));
+        myHandler.setProductService(new ProductService(new ProductRepositoryImplArrays()));
         myServer.setServerHandler(myHandler);
         myServer.startServer();
     }
