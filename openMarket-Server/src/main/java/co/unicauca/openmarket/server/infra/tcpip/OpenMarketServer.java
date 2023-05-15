@@ -16,6 +16,7 @@ import java.util.Scanner;
 /**
  * @author brayan
  */
+
 public class OpenMarketServer {
     /**
      * @param args the command line arguments

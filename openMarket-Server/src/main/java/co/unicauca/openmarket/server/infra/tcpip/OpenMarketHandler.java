@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author brayan
@@ -42,7 +43,9 @@ public class OpenMarketHandler extends ServerHandler {
                 if (protocolRequest.getAction().equals("deleteProduct")) {
                     response = String.valueOf(processDeleteProduct(protocolRequest));
                 }
-
+                if (protocolRequest.getAction().equals("getProductsByName")) {
+                    response = processGetProductsByName(protocolRequest);
+                }
                 if (protocolRequest.getAction().equals("post")) {
                     response = processPostProduct(protocolRequest);
                 }
@@ -77,16 +80,33 @@ public class OpenMarketHandler extends ServerHandler {
                     //Lista de las categoria
                     response = processListCategory();
                 }
+                if (protocolRequest.getAction().equals("getListCategoryByName")) {
+                    //Listar categorias por nombre
+                    response = processGetListCategoryByName(protocolRequest);
+                }
                 if (protocolRequest.getAction().equals("getListCategory")) {
                     //Listar categorias por nombre
-                    response = processGetListCategory(protocolRequest);
+                    response = processGetListCategory();
                 }
+
 
         }
 
 
         return response;
 
+    }
+
+    private String processGetProductsByName(Protocol protocolRequest) {
+        String productName = protocolRequest.getParameters().get(0).getValue();
+        List<Product> products=getProductService().findByName(productName);
+        return objectToJSON(products);
+    }
+
+    private String processGetListCategory() {
+        List<Category> categories;
+        categories = getCategoryService().findAll();
+        return objectToJSON(categories);
     }
 
     private String processDeleteProduct(Protocol protocolRequest) {
@@ -169,12 +189,11 @@ public class OpenMarketHandler extends ServerHandler {
         }
     }
 
-    private String processGetListCategory(Protocol protocolRequest) {
-        //Listar categorias por nombre
+    private String processGetListCategoryByName(Protocol protocolRequest) {
         String name = protocolRequest.getParameters().get(0).getValue();
-        List<Category> category;
-        category = getCategoryService().findByName(name);
-        return objectToJSON(category);
+        List<Category> categories;
+        categories = getCategoryService().findByName(name);
+        return objectToJSON(categories);
     }
 
     private String processDeleteCategory(Protocol protocolRequest) {
@@ -219,6 +238,9 @@ public class OpenMarketHandler extends ServerHandler {
 
         return gson.toJson(errors);
     }
+
+
+
 
 
     public CategoryService getCategoryService() {

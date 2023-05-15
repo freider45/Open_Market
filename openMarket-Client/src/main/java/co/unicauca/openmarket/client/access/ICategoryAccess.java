@@ -17,10 +17,10 @@ import java.util.List;
 public interface ICategoryAccess {
     
    boolean save(Category newCategory)throws Exception;
-   boolean edit(Long id, Category category);
-   boolean delete(Long id);
+   boolean edit(Long id, Category category)throws Exception;
+   boolean delete(Long id)throws Exception;
    Category findById(Long id)throws Exception;
-   List<Category> findAll();
-   public List<Category> findByName(String name);
+   List<Category> findAll()throws Exception;
+   public List<Category> findByName(String name)throws Exception;
 
 }

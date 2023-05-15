@@ -8,10 +8,13 @@ package co.unicauca.openmarket.client.access;
 
 import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.client.infra.OpenMarketSocket;
+import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.commons.infra.JsonError;
 import co.unicauca.openmarket.commons.infra.Protocol;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -126,8 +129,31 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
     
     //TODO
     @Override
-    public List<Category> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Category> findAll()throws Exception {
+          String jsonResponse = null;
+        String requestJson = doFindAllCategoriesRequestJson(jsonResponse);
+        System.out.println(requestJson);
+        try {
+            mySocket.connect();
+            jsonResponse = mySocket.sendRequest(requestJson);
+            mySocket.disconnect();
+        } catch (IOException ex) {
+            Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.SEVERE, "No hubo conexión con el servidor", ex);
+        }
+        if (jsonResponse == null) {
+            throw new Exception("No se pudo conectar con el servidor. Revise la red o que el servidor esté escuchando. ");
+        } else {
+            if (jsonResponse.contains("error")) {
+                //Devolvió algún error
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
+                throw new Exception(extractMessages(jsonResponse));
+            } else {
+                //Encontró el product
+                List<Category> products = jsonToCategoryList(jsonResponse);
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, "Lo que va en el JSon: ("+jsonResponse.toString()+ ")");
+                return products;
+            }
+        }
     }
     
     //TODO
@@ -173,7 +199,6 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
      * {"resource":"category","action":"get","parameters":[{"name":"categoryId","value":"1"}]}
      */
     private String doFindCategoyIdRequestJson(Long categoryId) {
-
         Protocol protocol = new Protocol();
         protocol.setResource("category");
         protocol.setAction("get");
@@ -220,6 +245,24 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
         Category category = gson.fromJson(jsonCategory, Category.class);
         return category;
 
+    }
+    private  List<Category>  jsonToCategoryList(String jsonProductList) {
+         Gson gson = new Gson();
+       Type categoryListType = new TypeToken<List<Category>>(){}.getType();
+       List<Category> categoryList = gson.fromJson(jsonProductList, categoryListType);
+       return categoryList;
+   }
+    
+    
+    private String doFindAllCategoriesRequestJson(String jsonProductList) {
+         Protocol protocol = new Protocol();
+        protocol.setResource("category");
+        protocol.setAction("getListCategory");
+
+        Gson gson = new Gson();
+        String requestJson = gson.toJson(protocol);
+
+        return requestJson;
     }
 
     

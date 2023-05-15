@@ -29,8 +29,6 @@ public class CategoryRepositoryImplArrays implements ICategoryRepository{
         category.add(new Category(1L, "Bebidas"));
         category.add(new Category(2L, "Lacteos"));
         category.add(new Category(3L, "Carnicos"));
-        
-
     }
     @Override
     public boolean save(Category newCategory) {
