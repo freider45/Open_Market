@@ -12,7 +12,7 @@ import java.util.List;
 public interface IProductRepository {
     String createProduct(Product newProduct);
     
-    String edit(Long id, Product product, Long categoryId);
+    boolean edit(Long id, Product product);
     
     boolean delete(Long id);
     //Long createProduct(Product product);

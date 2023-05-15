@@ -195,13 +195,13 @@ public class GUICategoriesFind extends javax.swing.JDialog {
                 "Envia la informacion correspondiente",
                 "Error tipo de dato",
                 JOptionPane.ERROR_MESSAGE);
-          }catch(Exception e){
+          } catch(Exception e){
+           
               JOptionPane.showMessageDialog(null,
-                "Seleccione por el dato que quiere buscar",
-                "Error al introducir el dato",
+                e.getMessage(),
+                "Error",
                 JOptionPane.ERROR_MESSAGE);
-                successMessage(e.getMessage(), "Atención"); 
-          }
+        }
             
       
           

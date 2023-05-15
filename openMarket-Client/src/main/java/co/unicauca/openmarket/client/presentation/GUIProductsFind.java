@@ -5,8 +5,10 @@
  */
 package co.unicauca.openmarket.client.presentation;
 
+import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
+import co.unicauca.openmarket.commons.domain.Category;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,80 +20,112 @@ import javax.swing.table.DefaultTableModel;
  * @author Libardo Pantoja
  */
 public class GUIProductsFind extends javax.swing.JDialog {
+
     private ProductService productService;
+    private CategoryService categoryService;
+
     /**
      * Creates new form GUIProductsFind
      */
-    public GUIProductsFind(java.awt.Frame parent, boolean modal,ProductService productService) {
+    public GUIProductsFind(java.awt.Frame parent, boolean modal, ProductService productService) {
         super(parent, modal);
         initComponents();
         initializeTable();
         this.productService = productService;
         setLocationRelativeTo(null); //centrar al ventana
     }
-    
+
     private void initializeTable() {
         tblProducts.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Id", "Name", "Description"
+                    "Id", "Name", "Description","Categoria"
                 }
         ));
     }
-  
-    
-    private void fillTable(List<Product> listProducts) {
+
+    private void fillTable(List<Product> listProducts) throws Exception {
         initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 
-        Object rowData[] = new Object[3];//No columnas
+        Object rowData[] = new Object[4];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
             rowData[0] = listProducts.get(i).getProductId();
             rowData[1] = listProducts.get(i).getName();
             rowData[2] = listProducts.get(i).getDescription();
-            
+                  if ((listProducts.get(i).getCategoryId())!=null) {
+                 Long catId=listProducts.get(i).getCategoryId();
+                String catName= categoryService.findCategoryById(catId).getName();
+                rowData[3] = catName;
+            } else {
+                rowData[3] = "No establecido";
+            }
             model.addRow(rowData);
         }
     }
-    private void fillTableId(Product producto){
-      initializeTable();
+
+    private void fillTableId(Product producto) throws Exception {
+        initializeTable();
+        DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
+
+        Object rowData[] = new Object[4];//No columnas
+        rowData[0] = producto.getProductId();
+        rowData[1] = producto.getName();
+        rowData[2] = producto.getDescription();
+          if ((producto.getCategoryId())!=null) {
+                 Long catId=producto.getCategoryId();
+                String catName= categoryService.findCategoryById(catId).getName();
+                rowData[3] = catName;
+            } else {
+                rowData[3] = "No establecido";
+            }
+
+        model.addRow(rowData);
+    }
+
+    private void fillTableName(List<Product> listProducts) throws Exception {
+        initializeTable();
+        DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
+
+        Object rowData[] = new Object[4];//No columnas
+        for (int i = 0; i < listProducts.size(); i++) {
+            rowData[0] = listProducts.get(i).getProductId();
+
+            rowData[1] = listProducts.get(i).getName();
+            rowData[2] = listProducts.get(i).getDescription();
+           if ((listProducts.get(i).getCategoryId())!=null) {
+                 Long catId=listProducts.get(i).getCategoryId();
+                String catName= categoryService.findCategoryById(catId).getName();
+                rowData[3] = catName;
+            } else {
+                rowData[3] = "No establecido";
+            }
+            model.addRow(rowData);
+        }
+    }
+
+    private void fillTableCategory(List<Product> listProducts) throws Exception {
+        initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
        
         Object rowData[] = new Object[3];//No columnas
-        rowData[0] =producto.getProductId();
-        rowData[1] =producto.getName();
-        rowData[2] =producto.getDescription();
-       
-        model.addRow(rowData);  
-    }
-    private void fillTableName(List<Product> listProducts) {
-        initializeTable();
-        DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
-
-        Object rowData[] = new Object[3];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
+         
             rowData[0] = listProducts.get(i).getProductId();
-               
+
             rowData[1] = listProducts.get(i).getName();
             rowData[2] = listProducts.get(i).getDescription();
-            
+            if ((listProducts.get(i).getCategoryId())!=null) {
+                 Long catId=listProducts.get(i).getCategoryId();
+                String catName= categoryService.findCategoryById(catId).getName();
+                rowData[3] = catName;
+            } else {
+                rowData[3] = "No establecido";
+            }
             model.addRow(rowData);
         }
     }
-     private void fillTableCategory(List<Product> listProducts) {
-        initializeTable();
-        DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 
-        Object rowData[] = new Object[3];//No columnas
-        for (int i = 0; i < listProducts.size(); i++) {
-            rowData[0] = listProducts.get(i).getProductId();
-               
-            rowData[1] = listProducts.get(i).getName();
-            rowData[2] = listProducts.get(i).getDescription();
-            
-            model.addRow(rowData);
-        }
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -207,37 +241,35 @@ public class GUIProductsFind extends javax.swing.JDialog {
 
     private void btnSearchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchAllActionPerformed
         try {
-            fillTable( productService.findAllProducts());
+            fillTable(productService.findAllProducts());
         } catch (Exception ex) {
             Logger.getLogger(GUIProductsFind.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnSearchAllActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-          try{
-               if(this.rdoId.isSelected()==true){
-               
-                  fillTableId(productService.findProductById(Long.parseLong(this.txtSearch.getText())) );
-                }else if(this.rdoCategory.isSelected()==true){
-                     fillTableCategory(productService.findProductsByCategory(this.txtSearch.getText()));
-                 }
-                else{
-                   fillTableName (productService.findProductsByName(this.txtSearch.getText())); 
-             }
-          }catch(NullPointerException ex){
-                JOptionPane.showMessageDialog(null,
-                "Envia la informacion correspondiente",
-                "Error tipo de dato",
-                JOptionPane.ERROR_MESSAGE);
-          }catch(Exception e){
-              JOptionPane.showMessageDialog(null,
-                "Seleccione por el dato que quiere buscar",
-                "Error al introducir el dato",
-                JOptionPane.ERROR_MESSAGE);
-          }
-            
-      
-          
+        try {
+            if (this.rdoId.isSelected() == true) {
+
+                fillTableId(productService.findProductById(Long.valueOf(this.txtSearch.getText())));
+            } else if (this.rdoCategory.isSelected() == true) {
+                fillTableCategory(productService.findProductsByCategory(this.txtSearch.getText()));
+            } else {
+                fillTableName(productService.findProductsByName(this.txtSearch.getText()));
+            }
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(null,
+                    "Envia la informacion correspondiente",
+                    "Error tipo de dato",
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
@@ -248,7 +280,6 @@ public class GUIProductsFind extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_rdoNameActionPerformed
 
- 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;

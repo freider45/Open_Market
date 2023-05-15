@@ -104,28 +104,7 @@ public class ProductRepositoryImplMysql implements IProductRepository {
         return newProduct.getProductId().toString();
     }
 
-    public String edit(Long id, Product product, Long categoryId) {
-       
-        try {
-              this.connect();
-            String sql = "UPDATE  products "
-                    + "SET name=?, description=?, categoryId=? "
-                    + "WHERE productId = ?";
-
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, product.getName());
-            pstmt.setString(2, product.getDescription());
-            pstmt.setLong(3, categoryId);
-            pstmt.setLong(4, id);
-            pstmt.executeUpdate();
-            pstmt.close();
-            this.disconnect();
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return product.getProductId().toString();
-    }
-
+   
     @Override
     public boolean delete(Long id) {
         try {
@@ -247,6 +226,29 @@ public class ProductRepositoryImplMysql implements IProductRepository {
         }
 
         return products;
+    }
+
+    @Override
+    public boolean edit(Long id, Product product) {
+          
+        try {
+              this.connect();
+            String sql = "UPDATE  products "
+                    + "SET name=?, description=?, categoryId=? "
+                    + "WHERE productId = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, product.getName());
+            pstmt.setString(2, product.getDescription());
+            pstmt.setLong(3, product.getCategoryId());
+            pstmt.setLong(4, id);
+            pstmt.executeUpdate();
+            pstmt.close();
+            this.disconnect();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductRepositoryImplMysql.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
     }
 
  

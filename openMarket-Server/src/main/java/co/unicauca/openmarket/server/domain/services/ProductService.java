@@ -57,8 +57,8 @@ public class ProductService {
         return repo.createProduct(product);
     }
     
-    public synchronized String edit(Long id, Product newProduct, Long categoryId){
-        return repo.edit(id, newProduct, categoryId);
+    public synchronized boolean edit(Long id, Product newProduct){
+        return repo.edit(id, newProduct);
     }
     
     public synchronized boolean delete(Long id){

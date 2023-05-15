@@ -106,7 +106,6 @@ public class ProductAccessImplSockets implements IProductAccess {
         return bandera;
     }
 
-    @Override
     public boolean edit(Long id, Product product, Long categoryId) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -366,6 +365,48 @@ public class ProductAccessImplSockets implements IProductAccess {
         Gson gson = new Gson();
         String requestJson = gson.toJson(protocol);
         return requestJson;
+    }
+    private String doEditProductRequestJson(Long prodId,Product product) {
+        Protocol protocol = new Protocol();
+        protocol.setResource("product");
+        protocol.setAction("edit");
+        protocol.addParameter("productId", product.getProductId().toString());
+        protocol.addParameter("name", product.getName());
+        protocol.addParameter("description", product.getDescription());
+        protocol.addParameter("categoryId", product.getCategoryId().toString());
+
+        Gson gson = new Gson();
+        String requestJson = gson.toJson(protocol);
+        return requestJson;
+    }
+    @Override
+    public boolean edit(Long id, Product product) throws Exception {
+         boolean bandera = false;
+        String jsonResponse = null;
+        String requestJson = doEditProductRequestJson(id,product);
+        try {
+            mySocket.connect();
+            jsonResponse = mySocket.sendRequest(requestJson);
+            mySocket.disconnect();
+
+        } catch (IOException ex) {
+            Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.SEVERE, "No hubo conexión con el servidor", ex);
+        }
+        if (jsonResponse == null) {
+            throw new Exception("No se pudo conectar con el servidor");
+        } else {
+
+            if (jsonResponse.contains("error")) {
+                //Devolvió algún error                
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
+                throw new Exception(extractMessages(jsonResponse));
+            } else {
+                //Agregó correctamente, devuelve verdadero 
+                bandera = true;
+            }
+
+        }
+        return bandera;
     }
 
 

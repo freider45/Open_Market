@@ -75,13 +75,13 @@ public class ProductService  {
        
     }
 
-    public boolean editProduct(Long productId, Product prod,Long categoryId) throws Exception {
+    public boolean editProduct(Long productId, Product newProd) throws Exception {
      
         //Validate product
-        if (prod == null || prod.getName().isBlank() || prod.getDescription().isBlank() ) {
+        if (newProd == null || newProd.getName().isBlank() || newProd.getDescription().isBlank() ) {
             return false;
         }
-        return repository.edit(productId, prod,categoryId);
+        return repository.edit(productId, newProd);
 
     }
 

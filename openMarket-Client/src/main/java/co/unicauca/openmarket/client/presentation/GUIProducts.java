@@ -1,5 +1,6 @@
 package co.unicauca.openmarket.client.presentation;
 
+import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 public class GUIProducts extends javax.swing.JFrame {
 
     private ProductService productService;
+    private CategoryService categoryService;
     private boolean addOption;
 
     /**
@@ -39,6 +41,7 @@ public class GUIProducts extends javax.swing.JFrame {
         pnlSouth = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        btnTerminarEdicion = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -76,6 +79,14 @@ public class GUIProducts extends javax.swing.JFrame {
             }
         });
         pnlSouth.add(btnEditar);
+
+        btnTerminarEdicion.setText("Terminar edición");
+        btnTerminarEdicion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTerminarEdicionActionPerformed(evt);
+            }
+        });
+        pnlSouth.add(btnTerminarEdicion);
 
         btnSave.setText("Grabar");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -165,7 +176,7 @@ public class GUIProducts extends javax.swing.JFrame {
                     .addComponent(txtName)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                     .addComponent(txtCategory))
-                .addContainerGap(201, Short.MAX_VALUE))
+                .addContainerGap(248, Short.MAX_VALUE))
         );
         pnlCenterLayout.setVerticalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,18 +236,14 @@ public class GUIProducts extends javax.swing.JFrame {
             try {
                 //Agregar
                 addProduct();
-            } catch (Exception ex) {
-                Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        } else {
-            try {
-                //Editar
-                editProduct();
-            } catch (Exception ex) {
-                Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch(Exception e){
+           
+              JOptionPane.showMessageDialog(null,
+                e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
+        } 
 
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -247,7 +254,7 @@ public class GUIProducts extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-
+   try {
         String id = txtId.getText().trim();
         if (id.equals("")) {
             Messages.showMessageDialog("Debe buscar el producto a eliminar", "Atención");
@@ -256,19 +263,28 @@ public class GUIProducts extends javax.swing.JFrame {
         }
         Long productId = Long.valueOf(id);
         if (Messages.showConfirmDialog("Está seguro que desea eliminar este producto?", "Confirmación") == JOptionPane.YES_NO_OPTION) {
-        
-            try {
-                if (productService.deleteProduct(productId) ) {
+
+         
+                if (productService.deleteProduct(productId)) {
                     Messages.showMessageDialog("Producto eliminado con éxito", "Atención");
                     stateInitial();
                     cleanControls();
                 }
-            } catch (Exception ex) {
-                Messages.showMessageDialog("El id del producto no existe", "Error");
-                Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
-                
-            }
-         
+
+        }
+   }
+        catch(NumberFormatException e){
+                   JOptionPane.showMessageDialog(null,
+                "El id debe ser un numero",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+          
+          } catch(Exception e){
+           
+              JOptionPane.showMessageDialog(null,
+                e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -285,20 +301,46 @@ public class GUIProducts extends javax.swing.JFrame {
         addOption = false;
         stateDelete();
         txtId.requestFocus();
-        
+
     }//GEN-LAST:event_btnBorrarProductoActionPerformed
+
+    private void btnTerminarEdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTerminarEdicionActionPerformed
+        try {
+            if (txtId.getText().trim().equals("")) {
+                Messages.showMessageDialog("Debe ingresar el id del producto", "Atención");
+                txtId.requestFocus();
+                return;
+            }
+            //Editar
+            editProduct();
+        }catch(Exception e){
+           
+              JOptionPane.showMessageDialog(null,
+                e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        
+           
+            
+        
+
+    }//GEN-LAST:event_btnTerminarEdicionActionPerformed
     private void stateEdit() {
         btnNuevo.setVisible(false);
         btnEditar.setVisible(false);
         btnCancelar.setVisible(true);
         btnCerrar.setVisible(false);
-        btnSave.setVisible(true);
+        btnSave.setVisible(false);
         btnFind.setVisible(false);
         txtName.setEnabled(true);
         txtDescription.setEnabled(true);
         txtCategory.setEnabled(true);
         txtId.setEnabled(true);
         btnBorrarProducto.setVisible(false);
+        btnTerminarEdicion.setVisible(true);
+        txtId.setToolTipText("Digite el id del producto a editar");
+        lblId.setText("*Id del producto a editar");
     }
 
     private void stateInitial() {
@@ -310,10 +352,12 @@ public class GUIProducts extends javax.swing.JFrame {
         btnCerrar.setVisible(true);
         btnSave.setVisible(false);
         btnFind.setVisible(true);
+        btnTerminarEdicion.setVisible(false);
         txtId.setEnabled(false);
         txtName.setEnabled(false);
         txtDescription.setEnabled(false);
         txtCategory.setEnabled(false);
+        lblId.setText("*Id");
 
     }
 
@@ -326,6 +370,7 @@ public class GUIProducts extends javax.swing.JFrame {
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnTerminarEdicion;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -347,12 +392,11 @@ public class GUIProducts extends javax.swing.JFrame {
         btnCerrar.setVisible(false);
         btnSave.setVisible(true);
         btnFind.setVisible(false);
-         txtId.setEnabled(true);
+        txtId.setEnabled(true);
         txtName.setEnabled(true);
         txtDescription.setEnabled(true);
         txtCategory.setEnabled(true);
         btnBorrarProducto.setVisible(false);
-       
 
     }
 
@@ -361,24 +405,28 @@ public class GUIProducts extends javax.swing.JFrame {
         txtName.setText("");
         txtDescription.setText("");
         txtCategory.setText("");
-        
+
     }
 
     private void addProduct() {
         try {
-            String id= txtId.getText().trim();
+            String id = txtId.getText().trim();
             String name = txtName.getText().trim();
             String description = txtDescription.getText().trim();
-            Long categoryId=Long.valueOf(this.txtCategory.getText());
-            if (productService.saveProduct(Long.valueOf(id),name, description, categoryId)) {
+            Long categoryId = Long.valueOf(this.txtCategory.getText());
+            if (productService.saveProduct(Long.valueOf(id), name, description, categoryId)) {
                 Messages.showMessageDialog("Se grabó con éxito", "Atención");
                 cleanControls();
                 stateInitial();
             } else {
                 Messages.showMessageDialog("Error al grabar, lo siento mucho", "Atención");
             }
-        } catch (Exception ex) {
-            Logger.getLogger(GUIProducts.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(Exception e){
+           
+              JOptionPane.showMessageDialog(null,
+                e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -390,12 +438,36 @@ public class GUIProducts extends javax.swing.JFrame {
             return;
         }
         Long productId = Long.valueOf(id);
-        Product prod = new Product();
-        prod.setName(txtName.getText().trim());
-        prod.setDescription(txtDescription.getText().trim());
-        prod.setCategoryId(Long.valueOf(txtCategory.getText()));
-        
-        if (productService.editProduct(productId, prod,prod.getCategoryId())) {
+
+        Product prod = productService.findProductById(productId);
+        System.out.println("co.unicauca.openmarket.client.presentation.GUIProducts.editProduct()");
+        System.out.println(prod.getDescription());
+        if (prod == null) {
+            Messages.showMessageDialog("El producto con el id " + id + " no existe", "Atención");
+            return;
+        }
+        if (!txtName.getText().isEmpty()) {
+            prod.setName(txtName.getText().trim());
+        }
+        if (!txtDescription.getText().isEmpty()) {
+            prod.setDescription(txtDescription.getText().trim());
+        }
+        if (!txtCategory.getText().isEmpty()) {
+            try {
+                Category cat= categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
+                prod.setCategoryId(cat.getCategoryId());
+            } catch (Exception e) {
+                  JOptionPane.showMessageDialog(null,
+                "El id de categoria no existe, por favor ingrese una categoria valida",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+                 prod=null;
+                return;
+            }
+            prod.setCategoryId(Long.valueOf(txtCategory.getText()));
+        }
+
+        if (productService.editProduct(productId, prod)) {
             Messages.showMessageDialog("Se editó con éxito", "Atención");
             cleanControls();
             stateInitial();
@@ -413,7 +485,7 @@ public class GUIProducts extends javax.swing.JFrame {
         btnCerrar.setVisible(false);
         btnSave.setVisible(false);
         btnFind.setVisible(false);
-         txtId.setEnabled(true);
+        txtId.setEnabled(true);
         txtName.setEnabled(false);
         txtDescription.setEnabled(false);
         txtCategory.setEnabled(false);

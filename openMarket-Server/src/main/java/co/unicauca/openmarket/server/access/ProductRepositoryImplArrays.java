@@ -44,12 +44,15 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
     }
 
     @Override
-    public String edit(Long id, Product product, Long categoryId) {
-       if(this.delete(id)){
-           products.add(product);
-           return product.getProductId().toString();
+    public boolean edit(Long id, Product product) {
+      Product productToEdit=findById(id);
+      productToEdit.setName(product.getName());
+       productToEdit.setDescription(product.getDescription());
+       if(!product.getCategoryId().toString().isEmpty()){
+             productToEdit.setCategoryId(product.getCategoryId());
        }
-        return "";
+     
+      return true;
     }
 
     @Override

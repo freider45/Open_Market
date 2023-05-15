@@ -13,7 +13,7 @@ import java.util.List;
 public interface IProductAccess {
     boolean save(Product newProduct,Long categoryId) throws Exception;
     
-    boolean edit(Long id, Product product, Long categoryId) throws Exception;
+    boolean edit(Long id, Product product) throws Exception;
     
     boolean delete(Long id) throws Exception;
 
