@@ -171,8 +171,32 @@ public class ProductAccessImplSockets implements IProductAccess {
     }
 
     @Override
-    public List<Product> findByCategory(String categoryName) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Product> findByCategory(String categoryName)throws Exception {
+             String jsonResponse = null;
+        String requestJson = doFindProductByCategoryRequestJson(categoryName);
+        System.out.println(requestJson);
+        try {
+            mySocket.connect();
+            jsonResponse = mySocket.sendRequest(requestJson);
+            mySocket.disconnect();
+
+        } catch (IOException ex) {
+            Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.SEVERE, "No hubo conexión con el servidor", ex);
+        }
+        if (jsonResponse == null) {
+            throw new Exception("No se pudo conectar con el servidor. Revise la red o que el servidor esté escuchando. ");
+        } else {
+            if (jsonResponse.contains("error")) {
+                //Devolvió algún error
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
+                throw new Exception(extractMessages(jsonResponse));
+            } else {
+                //Encontró el product
+                 List<Product> products = jsonToProductList(jsonResponse);
+                Logger.getLogger(ProductAccessImplSockets.class.getName()).log(Level.INFO, "Lo que va en el JSon: ("+jsonResponse.toString()+ ")");
+                return products;
+            }
+        }
     }
 
     @Override
@@ -329,6 +353,16 @@ public class ProductAccessImplSockets implements IProductAccess {
         protocol.setResource("product");
         protocol.setAction("getProductsByName");
         protocol.addParameter("productName", pname);
+        Gson gson = new Gson();
+        String requestJson = gson.toJson(protocol);
+        return requestJson;
+    }
+
+    private String doFindProductByCategoryRequestJson(String categoryName) {   
+         Protocol protocol = new Protocol();
+        protocol.setResource("product");
+        protocol.setAction("getProductsByCategory");
+        protocol.addParameter("productName", categoryName);
         Gson gson = new Gson();
         String requestJson = gson.toJson(protocol);
         return requestJson;

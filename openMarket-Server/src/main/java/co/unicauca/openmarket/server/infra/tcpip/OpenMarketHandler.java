@@ -46,11 +46,13 @@ public class OpenMarketHandler extends ServerHandler {
                 if (protocolRequest.getAction().equals("getProductsByName")) {
                     response = processGetProductsByName(protocolRequest);
                 }
+                if (protocolRequest.getAction().equals("getProductsByCategory")) {
+                    response = processGetProductsByCategory(protocolRequest);
+                }
                 if (protocolRequest.getAction().equals("post")) {
                     response = processPostProduct(protocolRequest);
                 }
                 if (protocolRequest.getAction().equals("getListProducts")) {
-
                     response = processGetListProductos();
                 }
                 if (protocolRequest.getAction().equals("edit")) {
@@ -88,13 +90,17 @@ public class OpenMarketHandler extends ServerHandler {
                     //Listar categorias por nombre
                     response = processGetListCategory();
                 }
-
-
         }
 
 
         return response;
 
+    }
+
+    private String processGetProductsByCategory(Protocol protocolRequest) {
+        String categoryName = protocolRequest.getParameters().get(0).getValue();
+        List<Product> products=getProductService().findByCategory(categoryName);
+        return objectToJSON(products);
     }
 
     private String processGetProductsByName(Protocol protocolRequest) {
