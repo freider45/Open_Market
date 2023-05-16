@@ -103,7 +103,7 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer {
         initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 
-        Object rowData[] = new Object[3];//No columnas
+        Object rowData[] = new Object[5];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
 
             rowData[0] = listProducts.get(i).getProductId();
@@ -112,6 +112,7 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer {
             rowData[2] = listProducts.get(i).getDescription();
     
                 Long catId = listProducts.get(i).getCategoryId();
+                
                 String catName = categoryService.findCategoryById(catId).getName();
                      rowData[3]=listProducts.get(i).getPrice();
                 rowData[4] = catName;

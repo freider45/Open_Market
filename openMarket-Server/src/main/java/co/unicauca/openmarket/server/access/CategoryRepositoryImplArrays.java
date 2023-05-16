@@ -22,7 +22,7 @@ public class CategoryRepositoryImplArrays implements ICategoryRepository{
             categories = new ArrayList<>();
         }
         
-        if (categories.size() == 0){
+        if (categories.isEmpty()){
            inicializar();
         }
     }

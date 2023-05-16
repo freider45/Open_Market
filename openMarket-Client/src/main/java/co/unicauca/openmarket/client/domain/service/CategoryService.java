@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  *
  * @author brayan
  */
-public class CategoryService implements Subject{
+    public class CategoryService implements Subject{
     private List<Observer> observers = new ArrayList<>();
     public CategoryService(){
         
