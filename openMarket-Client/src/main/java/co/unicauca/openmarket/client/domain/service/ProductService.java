@@ -1,11 +1,11 @@
 package co.unicauca.openmarket.client.domain.service;
 
 import co.unicauca.openmarket.client.access.IProductAccess;
-import co.unicauca.openmarket.commons.domain.Observer;
+import co.unicauca.openmarket.commons.observer.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import co.unicauca.openmarket.commons.domain.Product;
-import co.unicauca.openmarket.commons.domain.Subject;
+import co.unicauca.openmarket.commons.observer.Subject;
 
 /**
  *

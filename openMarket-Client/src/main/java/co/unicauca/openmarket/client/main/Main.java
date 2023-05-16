@@ -9,7 +9,7 @@ import co.unicauca.openmarket.client.presentation.GUICategory;
 import co.unicauca.openmarket.client.presentation.GUIProducts;
 import co.unicauca.openmarket.client.access.IProductAccess;
 import co.unicauca.openmarket.client.presentation.GUICategoriesFind;
-import co.unicauca.openmarket.commons.domain.Observer;
+import co.unicauca.openmarket.commons.observer.Observer;
 
 /**
  *
@@ -37,6 +37,7 @@ public class Main {
         GUIProducts instance2 = new GUIProducts(productService,categoryService);
         instance2.setVisible(true);
          instance2.setLocation(590, 0);
+         instance2.setSize(660, 480);
     }
     
 }

@@ -1,10 +1,14 @@
 package co.unicauca.openmarket.client.presentation;
 
+import co.unicauca.openmaket.client.command.AddProductCommand;
+import co.unicauca.openmaket.client.command.Invoker;
+import co.unicauca.openmaket.client.command.RemoveProductCommand;
 import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
 import co.unicauca.openmarket.client.infra.Messages;
+import co.unicauca.openmarket.commons.observer.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -13,11 +17,13 @@ import javax.swing.JOptionPane;
  *
  * @author Libardo Pantoja
  */
-public class GUIProducts extends javax.swing.JFrame {
+public class GUIProducts extends javax.swing.JFrame implements Observer {
 
     private ProductService productService;
     private CategoryService categoryService;
     private boolean addOption;
+    private Invoker invoker;
+
 
     /**
      * Creates new form GUIProducts
@@ -26,6 +32,8 @@ public class GUIProducts extends javax.swing.JFrame {
         initComponents();
         this.productService = productService;
         this.categoryService = categoryService;
+        this.invoker = new Invoker();
+        this.invoker.registerObserver(this);
         stateInitial();
 
     }
@@ -44,6 +52,8 @@ public class GUIProducts extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnTerminarEdicion = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
+        btnRehacer = new javax.swing.JButton();
+        btnDeshacer = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnFind = new javax.swing.JButton();
@@ -98,6 +108,22 @@ public class GUIProducts extends javax.swing.JFrame {
             }
         });
         pnlSouth.add(btnSave);
+
+        btnRehacer.setText("Rehacer");
+        btnRehacer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRehacerActionPerformed(evt);
+            }
+        });
+        pnlSouth.add(btnRehacer);
+
+        btnDeshacer.setText("Deshacer");
+        btnDeshacer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeshacerActionPerformed(evt);
+            }
+        });
+        pnlSouth.add(btnDeshacer);
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -191,7 +217,7 @@ public class GUIProducts extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                     .addComponent(txtCategory)
                     .addComponent(txtPrecio))
-                .addContainerGap(248, Short.MAX_VALUE))
+                .addContainerGap(427, Short.MAX_VALUE))
         );
         pnlCenterLayout.setVerticalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,9 +232,7 @@ public class GUIProducts extends javax.swing.JFrame {
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlCenterLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCenterLayout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(29, 29, 29)))
@@ -284,11 +308,15 @@ public class GUIProducts extends javax.swing.JFrame {
             }
             Long productId = Long.valueOf(id);
             if (Messages.showConfirmDialog("Está seguro que desea eliminar este producto?", "Confirmación") == JOptionPane.YES_NO_OPTION) {
+                Product product = productService.findProductById(productId);
+                RemoveProductCommand comm = new RemoveProductCommand(productService, product);
 
-                if (productService.deleteProduct(productId)) {
+                if (invoker.executeCommand(comm)) {
                     Messages.showMessageDialog("Producto eliminado con éxito", "Atención");
                     stateInitial();
                     cleanControls();
+                } else {
+                    Messages.showMessageDialog("Error al eliminar, lo siento mucho", "Atención");
                 }
 
             }
@@ -347,7 +375,22 @@ public class GUIProducts extends javax.swing.JFrame {
     private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrecioActionPerformed
+
+    private void btnDeshacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeshacerActionPerformed
+        invoker.undoLastCommand();
+        if (!invoker.hasMoreUndoCommands()) {
+            this.btnDeshacer.setVisible(false);
+        }
+    }//GEN-LAST:event_btnDeshacerActionPerformed
+
+    private void btnRehacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRehacerActionPerformed
+        invoker.redoLastCommand();
+        if (!invoker.hasMoreRedoCommands()) {
+            this.btnRehacer.setVisible(false);
+        }
+    }//GEN-LAST:event_btnRehacerActionPerformed
     private void stateEdit() {
+
         btnNuevo.setVisible(false);
         btnEditar.setVisible(false);
         btnCancelar.setVisible(true);
@@ -363,9 +406,12 @@ public class GUIProducts extends javax.swing.JFrame {
         txtId.setToolTipText("Digite el id del producto a editar");
         lblId.setText("*Id del producto a editar");
         txtPrecio.setEnabled(true);
+        btnDeshacer.setVisible(false);
+        btnRehacer.setVisible(false);
     }
 
     private void stateInitial() {
+       
         btnNuevo.setVisible(true);
         btnEditar.setVisible(true);
         btnEliminar.setVisible(false);
@@ -381,6 +427,9 @@ public class GUIProducts extends javax.swing.JFrame {
         txtCategory.setEnabled(false);
         lblId.setText("*Id");
         txtPrecio.setEnabled(false);
+          
+            btnDeshacer.setVisible(invoker.hasMoreUndoCommands());
+            btnRehacer.setVisible(invoker.hasMoreRedoCommands());
 
     }
 
@@ -388,10 +437,12 @@ public class GUIProducts extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrarProducto;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCerrar;
+    private javax.swing.JButton btnDeshacer;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnRehacer;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnTerminarEdicion;
     private javax.swing.JLabel jLabel1;
@@ -410,6 +461,7 @@ public class GUIProducts extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void stateNew() {
+
         btnNuevo.setVisible(false);
         btnEditar.setVisible(false);
         btnEliminar.setVisible(false);
@@ -423,6 +475,8 @@ public class GUIProducts extends javax.swing.JFrame {
         txtCategory.setEnabled(true);
         btnBorrarProducto.setVisible(false);
         txtPrecio.setEnabled(true);
+                btnDeshacer.setVisible(false);
+        btnRehacer.setVisible(false);
 
     }
 
@@ -442,12 +496,18 @@ public class GUIProducts extends javax.swing.JFrame {
             String description = txtDescription.getText().trim();
             Long categoryId = Long.valueOf(this.txtCategory.getText().trim());
             Double price = Double.valueOf(txtPrecio.getText().trim());
-            if (productService.saveProduct(Long.valueOf(id), name, description, price, categoryId)) {
+            Product prod = new Product(Long.valueOf(id), name, description, price, categoryId);
+
+            AddProductCommand comm = new AddProductCommand(productService, prod);
+
+            if (invoker.executeCommand(comm)) {
                 Messages.showMessageDialog("Se grabó con éxito", "Atención");
+
                 cleanControls();
                 stateInitial();
+
             } else {
-                Messages.showMessageDialog("Error al grabar, lo siento mucho", "Atención");
+                Messages.showMessageDialog("El id ya existe,ingrese otro", "Error");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -474,13 +534,13 @@ public class GUIProducts extends javax.swing.JFrame {
         if (!txtCategory.getText().isEmpty()) {
 
             Category cat = categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
-             if(cat==null){
-                  JOptionPane.showMessageDialog(null,
-                    "La categoria no existe, ingrese una valida",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                  return;
-             }   
+            if (cat == null) {
+                JOptionPane.showMessageDialog(null,
+                        "La categoria no existe, ingrese una valida",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             prod.setCategoryId(cat.getCategoryId());
 
         }
@@ -495,6 +555,7 @@ public class GUIProducts extends javax.swing.JFrame {
     }
 
     private void stateDelete() {
+        
         btnNuevo.setVisible(false);
         btnEditar.setVisible(false);
         btnEliminar.setVisible(true);
@@ -507,5 +568,16 @@ public class GUIProducts extends javax.swing.JFrame {
         txtName.setEnabled(false);
         txtDescription.setEnabled(false);
         txtCategory.setEnabled(false);
+        btnDeshacer.setVisible(false);
+        btnRehacer.setVisible(false);
+    }
+
+    @Override
+    public void update() {
+  
+            btnDeshacer.setVisible(invoker.hasMoreUndoCommands());
+            btnRehacer.setVisible(invoker.hasMoreRedoCommands());
+        
+
     }
 }

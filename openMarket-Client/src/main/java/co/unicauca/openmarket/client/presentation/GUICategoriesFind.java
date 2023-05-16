@@ -9,7 +9,7 @@ package co.unicauca.openmarket.client.presentation;
 import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.client.domain.service.CategoryService;
 import static co.unicauca.openmarket.client.infra.Messages.successMessage;
-import co.unicauca.openmarket.commons.domain.Observer;
+import co.unicauca.openmarket.commons.observer.Observer;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -9,7 +9,7 @@ import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
 import co.unicauca.openmarket.commons.domain.Category;
-import co.unicauca.openmarket.commons.domain.Observer;
+import co.unicauca.openmarket.commons.observer.Observer;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +49,6 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer {
     private void fillTable(List<Product> listProducts) throws Exception {
         initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
-
         Object rowData[] = new Object[5];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
             rowData[0] = listProducts.get(i).getProductId();
@@ -85,7 +84,7 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer {
         initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 
-        Object rowData[] = new Object[4];//No columnas
+        Object rowData[] = new Object[5];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
             rowData[0] = listProducts.get(i).getProductId();
             rowData[1] = listProducts.get(i).getName();

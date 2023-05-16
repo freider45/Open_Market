@@ -1,5 +1,7 @@
 package co.unicauca.openmarket.server.access;
+import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.commons.domain.Product;
+import co.unicauca.openmarket.server.domain.services.CategoryService;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
      */
     private static List<Product> products;
     private Connection conn;
+    private CategoryService categoryService;
 
     public ProductRepositoryImplArrays() {
         if (products == null) {
@@ -94,7 +97,9 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
     public List<Product> findByCategory(String categoryName) {
        List<Product> listaProductos = new ArrayList<>();
          for (Product product : products) {
-            if (product.getCategoryId().toString().equals(categoryName)) {
+             Category cat = categoryService.findById(product.getCategoryId());
+             String catName=cat.getName();
+            if (catName.equals(categoryName)) {
                 listaProductos.add(product);
             }
         }
