@@ -203,7 +203,7 @@ public class OpenMarketHandler extends ServerHandler {
     }
 
     private String processGetCategory(Protocol protocolRequest) {
-        Long id = Long.parseLong(protocolRequest.getParameters().get(0).getValue());
+        Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
         Category category = getCategoryService().findById(id);
         if (category == null) {
             return generateNotFoundErrorJson();
@@ -221,17 +221,23 @@ public class OpenMarketHandler extends ServerHandler {
 
     private String processDeleteCategory(Protocol protocolRequest) {
         // Eliminar una categoria
-        Long id = Long.parseLong(protocolRequest.getParameters().get(0).getValue());
+        Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
         boolean response = getCategoryService().delete(id);
         return String.valueOf(response);
     }
 
     private String processEditCategory(Protocol protocolRequest) {
         // Editar el name de la categoria
-        Long id = Long.parseLong(protocolRequest.getParameters().get(0).getValue());
-        String name = protocolRequest.getParameters().get(1).getValue();
-        Category newCategory = new Category(id, name);
-        boolean response = getCategoryService().edit(id, newCategory);
+        Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
+        Category category = getCategoryService().findById(id);
+        if (category == null) {
+            return generateNotFoundErrorJson();
+        }
+
+        category = new Category();
+        category.setCategoryId(Long.parseLong(protocolRequest.getParameters().get(0).getValue()));
+        category.setName(protocolRequest.getParameters().get(1).getValue());
+        boolean response = getCategoryService().edit(Long.parseLong(protocolRequest.getParameters().get(0).getValue()),category);
         return String.valueOf(response);
     }
 

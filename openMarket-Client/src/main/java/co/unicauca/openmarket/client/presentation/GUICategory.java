@@ -57,6 +57,7 @@ public class GUICategory extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
+        btnTerminarEdi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Categoria");
@@ -152,6 +153,13 @@ public class GUICategory extends javax.swing.JFrame {
             }
         });
 
+        btnTerminarEdi.setLabel("Terminar Edicion");
+        btnTerminarEdi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTerminarEdiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlSouthLayout = new javax.swing.GroupLayout(pnlSouth);
         pnlSouth.setLayout(pnlSouthLayout);
         pnlSouthLayout.setHorizontalGroup(
@@ -164,14 +172,16 @@ public class GUICategory extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGrabar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnTerminarEdi)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEliminar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBuscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCerrar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         pnlSouthLayout.setVerticalGroup(
             pnlSouthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +194,8 @@ public class GUICategory extends javax.swing.JFrame {
                     .addComponent(btnCancelar)
                     .addComponent(btnEliminar)
                     .addComponent(btnBuscar)
-                    .addComponent(btnCerrar))
+                    .addComponent(btnCerrar)
+                    .addComponent(btnTerminarEdi))
                 .addGap(22, 22, 22))
         );
 
@@ -291,6 +302,29 @@ public class GUICategory extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCerrarActionPerformed
 
+    private void btnTerminarEdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTerminarEdiActionPerformed
+        try {
+            if (txtId.getText().trim().equals("")) {
+                Messages.showMessageDialog("Debe ingresar el id de la categoria", "Atención");
+                txtId.requestFocus();
+                return;
+            }
+            if(txtNombre.getText().trim().equals("")){
+                Messages.showMessageDialog("Debe ingresar el nombre de la categoria", "Atención");
+                txtNombre.requestFocus();
+                return;
+            }
+            //Editar
+            editCategory();
+        }catch(Exception e){
+           
+              JOptionPane.showMessageDialog(null,
+                e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnTerminarEdiActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -298,10 +332,11 @@ public class GUICategory extends javax.swing.JFrame {
      private void stateEdit() {
         btnNuevo.setVisible(false);
         btnEditar.setVisible(false);
-        btnEliminar.setVisible(true);
+        btnEliminar.setVisible(false);
+        btnTerminarEdi.setVisible(true);
         btnCancelar.setVisible(true);
         btnCerrar.setVisible(false);
-        btnGrabar.setVisible(true);
+        btnGrabar.setVisible(false);
         btnBuscar.setVisible(false);
         txtId.setEnabled(true);
         txtNombre.setEnabled(true);
@@ -315,6 +350,7 @@ public class GUICategory extends javax.swing.JFrame {
         btnNuevo.setVisible(true);
         btnEditar.setVisible(true);
         btnEliminar.setVisible(false);
+        btnTerminarEdi.setVisible(false);
         btnCancelar.setVisible(false);
         btnCerrar.setVisible(true);
         btnGrabar.setVisible(false);
@@ -331,6 +367,7 @@ public class GUICategory extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnTerminarEdi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel pnlCenter;
@@ -378,11 +415,6 @@ public class GUICategory extends javax.swing.JFrame {
     //editar categorias
     private void editCategory() throws Exception {
         String id=this.txtId.getText().trim();
-        if(id.equals("")){
-            Messages.showMessageDialog("Debe buscar el producto a editar","Atencion");
-            this.txtId.requestFocus();
-            return;
-        }
         Long categoryId=Long.parseLong(id);
         Category cat=new Category();
         cat.setName(this.txtNombre.getText().trim());

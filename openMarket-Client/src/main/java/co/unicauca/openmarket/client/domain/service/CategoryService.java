@@ -34,6 +34,7 @@ public class CategoryService {
         
         //Validate product
         if(cat==null || cat.getName().isBlank()){
+            System.out.println("---------------------Entra---------------------");
             return false;
         }
       
