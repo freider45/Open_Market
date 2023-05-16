@@ -8,6 +8,8 @@ import co.unicauca.openmarket.client.domain.service.ProductService;
 import co.unicauca.openmarket.client.presentation.GUICategory;
 import co.unicauca.openmarket.client.presentation.GUIProducts;
 import co.unicauca.openmarket.client.access.IProductAccess;
+import co.unicauca.openmarket.client.presentation.GUICategoriesFind;
+import co.unicauca.openmarket.commons.domain.Observer;
 
 /**
  *
@@ -28,6 +30,7 @@ public class Main {
         
 
         GUICategory instance1=new GUICategory(categoryService);
+    
         instance1.setVisible(true);
         instance1.setSize(595, 380);
         instance1.setLocation(0,0);

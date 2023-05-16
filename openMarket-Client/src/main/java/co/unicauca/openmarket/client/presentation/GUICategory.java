@@ -9,6 +9,7 @@ import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.client.infra.Messages;
 import static co.unicauca.openmarket.client.infra.Messages.successMessage;
+import co.unicauca.openmarket.commons.domain.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -294,7 +295,8 @@ public class GUICategory extends javax.swing.JFrame {
 //           
 //        }
 
-        GUICategoriesFind instance = new GUICategoriesFind(this, true, categoryService);
+        GUICategoriesFind instance = new GUICategoriesFind(this, false, categoryService);
+        categoryService.registerObserver(instance);
         instance.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
@@ -427,6 +429,8 @@ public class GUICategory extends javax.swing.JFrame {
             Messages.showMessageDialog("Error al editar, lo siento mucho", "Atención");
         }
     }
+
+
 
 
 }

@@ -250,12 +250,20 @@ public class GUIProductsFind extends javax.swing.JDialog {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         try {
+               if(txtSearch.getText().trim().isBlank()){
+                      JOptionPane.showMessageDialog(null,
+                    "El texto no debe estar vacio",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             if (this.rdoId.isSelected() == true) {
 
                 fillTableId(productService.findProductById(Long.valueOf(this.txtSearch.getText())));
             } else if (this.rdoCategory.isSelected() == true) {
+             
                 fillTableCategory(productService.findProductsByCategory(this.txtSearch.getText()));
-            } else {
+            } else if(this.rdoName.isSelected() == true) {
                 fillTableName(productService.findProductsByName(this.txtSearch.getText()));
             }
         } catch (NullPointerException ex) {

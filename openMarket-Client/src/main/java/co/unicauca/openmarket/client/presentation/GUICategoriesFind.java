@@ -9,6 +9,7 @@ package co.unicauca.openmarket.client.presentation;
 import co.unicauca.openmarket.commons.domain.Category;
 import co.unicauca.openmarket.client.domain.service.CategoryService;
 import static co.unicauca.openmarket.client.infra.Messages.successMessage;
+import co.unicauca.openmarket.commons.domain.Observer;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Libardo Pantoja
  */
-public class GUICategoriesFind extends javax.swing.JDialog {
+public class GUICategoriesFind extends javax.swing.JDialog implements Observer{
     private CategoryService categoryService;
     /**
      * Creates new form GUIProductsFind
@@ -232,4 +233,13 @@ public class GUICategoriesFind extends javax.swing.JDialog {
     private javax.swing.JTable tblProducts;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update() {
+        try {
+            fillTable(categoryService.findAllCategories());
+        } catch (Exception ex) {
+            Logger.getLogger(GUICategoriesFind.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

@@ -2,15 +2,17 @@ package co.unicauca.openmarket.client.domain.service;
 
 
 import co.unicauca.openmarket.client.access.IProductAccess;
+import co.unicauca.openmarket.commons.domain.Observer;
 import java.util.ArrayList;
 import java.util.List;
 import co.unicauca.openmarket.commons.domain.Product;
+import co.unicauca.openmarket.commons.domain.Subject;
 
 /**
  *
  * @author Libardo, Julio
  */
-public class ProductService  {
+public class ProductService implements Subject {
       
     public ProductService(){
     
@@ -60,9 +62,9 @@ public class ProductService  {
     public List<Product> findProductsByName(String name) throws Exception  {
         List<Product> products = new ArrayList<>();
         products = repository.findByName(name);
-
         return products;
     }
+    
     public List<Product> findProductsByCategory(String categoryName) throws Exception {
         List<Product> products = new ArrayList<>();
         products = repository.findByCategory(categoryName);
@@ -83,6 +85,21 @@ public class ProductService  {
         }
         return repository.edit(productId, newProd);
 
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void notifyObservers() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

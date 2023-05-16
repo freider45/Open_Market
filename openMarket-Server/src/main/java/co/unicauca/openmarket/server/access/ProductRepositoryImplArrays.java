@@ -22,7 +22,7 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
         if (products == null) {
             products = new ArrayList<>();
         }
-
+        
         if (products.isEmpty()) {
             inicializar();
         }
@@ -92,7 +92,13 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
 
     @Override
     public List<Product> findByCategory(String categoryName) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       List<Product> listaProductos = new ArrayList<>();
+         for (Product product : products) {
+            if (product.getCategoryId().equals(categoryName)) {
+                listaProductos.add(product);
+            }
+        }
+        return listaProductos;
     }
 
     @Override

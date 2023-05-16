@@ -96,7 +96,7 @@ public class CategoryAccessImplSockets implements ICategoryAccess {
                 Logger.getLogger(CategoryAccessImplSockets.class.getName()).log(Level.INFO, jsonResponse);
                 throw new Exception(extractMessages(jsonResponse));
             } else {
-                //Agregó correctamente, devuelve true
+ 
                 //Logger.getLogger(CategoryAccessImplSockets.class.getName()).log(Level.INFO, "Lo que va en el JSon: ("+newCategory.getCategoryId().toString()+ ")");
                 bandera = true;
             }
