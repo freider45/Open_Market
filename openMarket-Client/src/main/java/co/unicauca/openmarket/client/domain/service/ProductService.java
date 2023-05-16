@@ -39,7 +39,7 @@ public class ProductService  {
         
         
         //Validate product
-        if (newProduct.getName().isBlank() ) {
+        if (newProduct.getName().isEmpty()|| newProduct.getDescription().isEmpty() || newProduct.getProductId().toString().isEmpty() ) {
             return false;
         }
 

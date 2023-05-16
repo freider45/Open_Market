@@ -300,13 +300,15 @@ public class ProductAccessImplSockets implements IProductAccess {
      * {"resource":"product","action":"post","parameters":[{"name":"productId","value":"1"},{"name":"name","value":"Leche"},...}]}
      */
     private String doCreateProductRequestJson(Product product) {
-
         Protocol protocol = new Protocol();
         protocol.setResource("product");
         protocol.setAction("post");
         protocol.addParameter("productId", product.getProductId().toString());
         protocol.addParameter("name", product.getName());
         protocol.addParameter("description", product.getDescription());
+        if(product.getCategoryId()!=null){
+            protocol.addParameter("categoryId", product.getCategoryId().toString());
+        }
 
         Gson gson = new Gson();
         String requestJson = gson.toJson(protocol);
