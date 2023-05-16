@@ -59,6 +59,8 @@ public class GUIProducts extends javax.swing.JFrame {
         txtCategory = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescription = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        txtPrecio = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Productos");
@@ -160,23 +162,35 @@ public class GUIProducts extends javax.swing.JFrame {
         txtDescription.setRows(5);
         jScrollPane1.setViewportView(txtDescription);
 
+        jLabel1.setText("precio*");
+
+        txtPrecio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlCenterLayout = new javax.swing.GroupLayout(pnlCenter);
         pnlCenter.setLayout(pnlCenterLayout);
         pnlCenterLayout.setHorizontalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlCenterLayout.createSequentialGroup()
-                .addGap(131, 131, 131)
-                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6)
-                    .addComponent(lblId))
-                .addGap(70, 70, 70)
+                .addGap(133, 133, 133)
+                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel5)
+                        .addComponent(lblId)
+                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel6)))
+                    .addComponent(jLabel7))
+                .addGap(68, 68, 68)
                 .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtId)
                     .addComponent(txtName)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                    .addComponent(txtCategory))
+                    .addComponent(txtCategory)
+                    .addComponent(txtPrecio))
                 .addContainerGap(248, Short.MAX_VALUE))
         );
         pnlCenterLayout.setVerticalGroup(
@@ -198,10 +212,15 @@ public class GUIProducts extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCenterLayout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(29, 29, 29)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGap(52, 52, 52))
         );
 
         lblId.getAccessibleContext().setAccessibleName("");
@@ -228,8 +247,12 @@ public class GUIProducts extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (txtName.getText().trim().equals("")) {
-            Messages.showMessageDialog("Debe ingresar el nombre del producto", "Atención");
+        if (txtName.getText().trim().equals("")
+                || txtCategory.getText().trim().equals("")
+                || txtDescription.getText().trim().equals("")
+                || txtPrecio.getText().trim().equals("")
+                || txtId.getText().trim().equals("")) {
+            Messages.showMessageDialog("Debe llenar todos los datos", "Atención");
             txtName.requestFocus();
             return;
         }
@@ -238,14 +261,11 @@ public class GUIProducts extends javax.swing.JFrame {
             //Agregar
             addProduct();
         } catch (Exception e) {
-
             JOptionPane.showMessageDialog(null,
                     e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
-
         }
-
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -315,7 +335,6 @@ public class GUIProducts extends javax.swing.JFrame {
             //Editar
             editProduct();
         } catch (Exception e) {
-
             JOptionPane.showMessageDialog(null,
                     e.getMessage(),
                     "Error",
@@ -324,6 +343,10 @@ public class GUIProducts extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnTerminarEdicionActionPerformed
+
+    private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioActionPerformed
     private void stateEdit() {
         btnNuevo.setVisible(false);
         btnEditar.setVisible(false);
@@ -339,6 +362,7 @@ public class GUIProducts extends javax.swing.JFrame {
         btnTerminarEdicion.setVisible(true);
         txtId.setToolTipText("Digite el id del producto a editar");
         lblId.setText("*Id del producto a editar");
+        txtPrecio.setEnabled(true);
     }
 
     private void stateInitial() {
@@ -356,6 +380,7 @@ public class GUIProducts extends javax.swing.JFrame {
         txtDescription.setEnabled(false);
         txtCategory.setEnabled(false);
         lblId.setText("*Id");
+        txtPrecio.setEnabled(false);
 
     }
 
@@ -369,6 +394,7 @@ public class GUIProducts extends javax.swing.JFrame {
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnTerminarEdicion;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -380,6 +406,7 @@ public class GUIProducts extends javax.swing.JFrame {
     private javax.swing.JTextArea txtDescription;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 
     private void stateNew() {
@@ -395,6 +422,7 @@ public class GUIProducts extends javax.swing.JFrame {
         txtDescription.setEnabled(true);
         txtCategory.setEnabled(true);
         btnBorrarProducto.setVisible(false);
+        txtPrecio.setEnabled(true);
 
     }
 
@@ -403,6 +431,7 @@ public class GUIProducts extends javax.swing.JFrame {
         txtName.setText("");
         txtDescription.setText("");
         txtCategory.setText("");
+        txtPrecio.setText("");
 
     }
 
@@ -411,8 +440,9 @@ public class GUIProducts extends javax.swing.JFrame {
             String id = txtId.getText().trim();
             String name = txtName.getText().trim();
             String description = txtDescription.getText().trim();
-            Long categoryId = Long.valueOf(this.txtCategory.getText());
-            if (productService.saveProduct(Long.valueOf(id), name, description, categoryId)) {
+            Long categoryId = Long.valueOf(this.txtCategory.getText().trim());
+            Double price = Double.valueOf(txtPrecio.getText().trim());
+            if (productService.saveProduct(Long.valueOf(id), name, description, price, categoryId)) {
                 Messages.showMessageDialog("Se grabó con éxito", "Atención");
                 cleanControls();
                 stateInitial();
@@ -420,7 +450,6 @@ public class GUIProducts extends javax.swing.JFrame {
                 Messages.showMessageDialog("Error al grabar, lo siento mucho", "Atención");
             }
         } catch (Exception e) {
-
             JOptionPane.showMessageDialog(null,
                     e.getMessage(),
                     "Error",
@@ -428,38 +457,32 @@ public class GUIProducts extends javax.swing.JFrame {
         }
     }
 
-
     private void editProduct() throws Exception {
-        String id = txtId.getText().trim();
-        if (id.equals("")) {
-            Messages.showMessageDialog("Debe buscar el producto a editar", "Atención");
-            txtId.requestFocus();
-            return;
-        }
-        Long productId = Long.valueOf(id);
+        Long productId = Long.valueOf(txtId.getText().trim());
 
         Product prod = productService.findProductById(productId);
-     
-       
+
         if (!txtName.getText().isEmpty()) {
             prod.setName(txtName.getText().trim());
         }
         if (!txtDescription.getText().isEmpty()) {
             prod.setDescription(txtDescription.getText().trim());
         }
+        if (!txtPrecio.getText().isEmpty()) {
+            prod.setPrice(Double.parseDouble(txtPrecio.getText().trim()));
+        }
         if (!txtCategory.getText().isEmpty()) {
-            try {
-                Category cat = this.categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
-                prod.setCategoryId(cat.getCategoryId());
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null,
-                        e.getMessage(),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                prod = null;
-                System.out.println(e.getMessage());
-                return;
-            }
+
+            Category cat = categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
+             if(cat==null){
+                  JOptionPane.showMessageDialog(null,
+                    "La categoria no existe, ingrese una valida",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                  return;
+             }   
+            prod.setCategoryId(cat.getCategoryId());
+
         }
 
         if (productService.editProduct(productId, prod)) {

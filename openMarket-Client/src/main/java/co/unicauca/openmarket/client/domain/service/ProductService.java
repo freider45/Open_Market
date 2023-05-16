@@ -31,18 +31,16 @@ public class ProductService implements Subject {
         this.repository = repository;
     }
 
-    public boolean saveProduct(Long id, String name, String description, Long categoryId) throws Exception {
-
+    public boolean saveProduct(Long id, String name, String description,Double price, Long categoryId) throws Exception {
+        
         Product newProduct = new Product();
         newProduct.setProductId(id);
         newProduct.setName(name);
         newProduct.setDescription(description);
+        newProduct.setPrice(price);
         newProduct.setCategoryId(categoryId);
 
-        //Validate product
-        if (newProduct.getName().isEmpty() || newProduct.getDescription().isEmpty() || newProduct.getProductId().toString().isEmpty()) {
-            return false;
-        }
+
         boolean result = repository.save(newProduct);
 
         // Notificar a los observadores solo si la categoría se guardó correctamente

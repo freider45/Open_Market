@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Libardo Pantoja
  */
-public class GUIProductsFind extends javax.swing.JDialog implements Observer{
+public class GUIProductsFind extends javax.swing.JDialog implements Observer {
 
     private ProductService productService;
     private CategoryService categoryService;
@@ -28,12 +28,12 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer{
     /**
      * Creates new form GUIProductsFind
      */
-    public GUIProductsFind(java.awt.Frame parent, boolean modal, ProductService productService,CategoryService categoryService) {
+    public GUIProductsFind(java.awt.Frame parent, boolean modal, ProductService productService, CategoryService categoryService) {
         super(parent, modal);
         initComponents();
         initializeTable();
         this.productService = productService;
-        this.categoryService=categoryService;
+        this.categoryService = categoryService;
         setLocationRelativeTo(null); //centrar al ventana
     }
 
@@ -41,7 +41,7 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer{
         tblProducts.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Id", "Name", "Description","Categoria"
+                    "Id", "Name", "Description", "Precio", "Categoria"
                 }
         ));
     }
@@ -50,18 +50,16 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer{
         initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 
-        Object rowData[] = new Object[4];//No columnas
+        Object rowData[] = new Object[5];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
             rowData[0] = listProducts.get(i).getProductId();
             rowData[1] = listProducts.get(i).getName();
             rowData[2] = listProducts.get(i).getDescription();
-            if ((listProducts.get(i).getCategoryId())!=null) {
-                 Long catId=listProducts.get(i).getCategoryId();
-                String catName= categoryService.findCategoryById(catId).getName();
-                rowData[3] = catName;
-            } else {
-                rowData[3] = "No establecido";
-            }
+            Long catId = listProducts.get(i).getCategoryId();
+            String catName = categoryService.findCategoryById(catId).getName();
+            rowData[3] = listProducts.get(i).getPrice();
+            rowData[4] = catName;
+
             model.addRow(rowData);
         }
     }
@@ -70,17 +68,15 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer{
         initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
 
-        Object rowData[] = new Object[4];//No columnas
+        Object rowData[] = new Object[5];//No columnas
         rowData[0] = producto.getProductId();
         rowData[1] = producto.getName();
         rowData[2] = producto.getDescription();
-          if ((producto.getCategoryId())!=null) {
-                 Long catId=producto.getCategoryId();
-                String catName= categoryService.findCategoryById(catId).getName();
-                rowData[3] = catName;
-            } else {
-                rowData[3] = "No establecido";
-            }
+
+        Long catId = producto.getCategoryId();
+        String catName = categoryService.findCategoryById(catId).getName();
+        rowData[3] = producto.getPrice();
+        rowData[4] = catName;
 
         model.addRow(rowData);
     }
@@ -92,16 +88,14 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer{
         Object rowData[] = new Object[4];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
             rowData[0] = listProducts.get(i).getProductId();
-
             rowData[1] = listProducts.get(i).getName();
             rowData[2] = listProducts.get(i).getDescription();
-           if ((listProducts.get(i).getCategoryId())!=null) {
-                 Long catId=listProducts.get(i).getCategoryId();
-                String catName= categoryService.findCategoryById(catId).getName();
-                rowData[3] = catName;
-            } else {
-                rowData[3] = "No establecido";
-            }
+
+            Long catId = listProducts.get(i).getCategoryId();
+            String catName = categoryService.findCategoryById(catId).getName();
+            rowData[3] = listProducts.get(i).getPrice();
+            rowData[4] = catName;
+
             model.addRow(rowData);
         }
     }
@@ -109,21 +103,20 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer{
     private void fillTableCategory(List<Product> listProducts) throws Exception {
         initializeTable();
         DefaultTableModel model = (DefaultTableModel) tblProducts.getModel();
-       
+
         Object rowData[] = new Object[3];//No columnas
         for (int i = 0; i < listProducts.size(); i++) {
-         
+
             rowData[0] = listProducts.get(i).getProductId();
 
             rowData[1] = listProducts.get(i).getName();
             rowData[2] = listProducts.get(i).getDescription();
-            if ((listProducts.get(i).getCategoryId())!=null) {
-                 Long catId=listProducts.get(i).getCategoryId();
-                String catName= categoryService.findCategoryById(catId).getName();
-                rowData[3] = catName;
-            } else {
-                rowData[3] = "No establecido";
-            }
+    
+                Long catId = listProducts.get(i).getCategoryId();
+                String catName = categoryService.findCategoryById(catId).getName();
+                     rowData[3]=listProducts.get(i).getPrice();
+                rowData[4] = catName;
+           
             model.addRow(rowData);
         }
     }
@@ -251,20 +244,20 @@ public class GUIProductsFind extends javax.swing.JDialog implements Observer{
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         try {
-               if(txtSearch.getText().trim().isBlank()){
-                      JOptionPane.showMessageDialog(null,
-                    "El texto no debe estar vacio",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+            if (txtSearch.getText().trim().isBlank()) {
+                JOptionPane.showMessageDialog(null,
+                        "El texto no debe estar vacio",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (this.rdoId.isSelected() == true) {
 
                 fillTableId(productService.findProductById(Long.valueOf(this.txtSearch.getText())));
             } else if (this.rdoCategory.isSelected() == true) {
-             
+
                 fillTableCategory(productService.findProductsByCategory(this.txtSearch.getText()));
-            } else if(this.rdoName.isSelected() == true) {
+            } else if (this.rdoName.isSelected() == true) {
                 fillTableName(productService.findProductsByName(this.txtSearch.getText()));
             }
         } catch (NullPointerException ex) {

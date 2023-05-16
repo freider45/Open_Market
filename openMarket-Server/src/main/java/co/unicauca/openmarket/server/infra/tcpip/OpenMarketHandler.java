@@ -10,12 +10,14 @@ import co.unicauca.openmarket.commons.infra.*;
 import co.unicauca.openmarket.server.domain.services.CategoryService;
 import co.unicauca.openmarket.server.domain.services.ProductService;
 import co.unicauca.openmarket.commons.domain.Product;
+import co.unicauca.openmarket.server.infra.Context;
+import co.unicauca.openmarket.server.infra.ErrorResponse;
 import co.unicauca.strategyserver.infra.ServerHandler;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 
 /**
  * @author brayan
@@ -23,6 +25,7 @@ import java.util.Objects;
 public class OpenMarketHandler extends ServerHandler {
     private static ProductService productService;
     private static CategoryService categoryService;
+
 
     public OpenMarketHandler() {
 
@@ -32,11 +35,12 @@ public class OpenMarketHandler extends ServerHandler {
     public String processRequest(String requestJson) {
         // Convertir la solicitud a objeto Protocol para poderlo procesar
         Gson gson = new Gson();
+
         Protocol protocolRequest;
         protocolRequest = gson.fromJson(requestJson, Protocol.class);
         String response = "";
         switch (protocolRequest.getResource()) {
-            case "product":
+            case "product" -> {
                 if (protocolRequest.getAction().equals("get")) {
                     response = processGetProduct(protocolRequest);
                 }
@@ -59,13 +63,12 @@ public class OpenMarketHandler extends ServerHandler {
                     // Editar un producto
                     response = processEditProduct(protocolRequest);
                 }
-                break;
-            case "category":
+            }
+            case "category" -> {
                 if (protocolRequest.getAction().equals("get")) {
                     // Consultar una categoria
                     response = processGetCategory(protocolRequest);
                 }
-
                 if (protocolRequest.getAction().equals("post")) {
                     // Agregar una categoria
                     response = processPostCategory(protocolRequest);
@@ -90,6 +93,7 @@ public class OpenMarketHandler extends ServerHandler {
                     //Listar categorias por nombre
                     response = processGetListCategory();
                 }
+            }
         }
 
 
@@ -120,7 +124,7 @@ public class OpenMarketHandler extends ServerHandler {
         System.out.println("borrado");
         Product product = getProductService().findById(Long.valueOf(productId));
         if (product == null) {
-            return generateNotFoundErrorJson();
+            return generateNotFoundErrorJson(Context.PRODUCT);
         }
         getProductService().delete(Long.valueOf(productId));
 
@@ -138,14 +142,22 @@ public class OpenMarketHandler extends ServerHandler {
         Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
         Product product = getProductService().findById(id);
         if (product == null) {
-            return generateNotFoundErrorJson();
+            return generateNotFoundErrorJson(Context.PRODUCT);
         }
+        Long catId= Long.parseLong(protocolRequest.getParameters().get(4).getValue());
+        Category category = getCategoryService().findById(catId);
 
-         product = new Product();
+        if(category==null){
+
+            generateNotFoundErrorJson(Context.CATEGORY);
+        }
+        product = new Product();
         product.setProductId(Long.parseLong(protocolRequest.getParameters().get(0).getValue()));
         product.setName(protocolRequest.getParameters().get(1).getValue());
         product.setDescription(protocolRequest.getParameters().get(2).getValue());
-        product.setCategoryId(Long.parseLong(protocolRequest.getParameters().get(3).getValue()));
+        product.setPrice(Double.parseDouble(protocolRequest.getParameters().get(3).getValue()));
+        product.setCategoryId(Long.parseLong(protocolRequest.getParameters().get(4).getValue()));
+
 
         boolean response = getProductService().edit(Long.parseLong(protocolRequest.getParameters().get(0).getValue()),product);
         return String.valueOf(response);
@@ -162,7 +174,7 @@ public class OpenMarketHandler extends ServerHandler {
 
         Product product = getProductService().findById(id);
         if (product == null) {
-            return generateNotFoundErrorJson();
+            return generateNotFoundErrorJson(Context.PRODUCT);
         } else {
             return objectToJSON(product);
         }
@@ -178,24 +190,33 @@ public class OpenMarketHandler extends ServerHandler {
 
     private String processPostProduct(Protocol protocolRequest) {
         Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
-
-        Product product= getProductService().findById(id);
+        Long catId= Long.valueOf(protocolRequest.getParameters().get(4).getValue());
+       Product product= getProductService().findById(id);
 
         if(!(product == null)){
-            return generateBadRequestJson("product");
-
+            return generateBadRequestJson(Context.PRODUCT);
         }
 
-         product = new Product();
-        // Reconstruir el customer a partir de lo que viene en los parámetros
+        Category category= getCategoryService().findById(catId);
+        if(category==null){
+            List<JsonError> errors = new ArrayList<>();
+            JsonError error = new JsonError();
+            error.setCode("400");
+            error.setError("BAD_REQUEST");
+            error.setMessage("Error, no existe una categoria con ese id");
+            errors.add(error);
+            Gson gson = new Gson();
+            return gson.toJson(errors);
+        }
+          product = new Product();
+        // Reconstruir el producto a partir de lo que viene en los parámetros
         product.setProductId(Long.valueOf(protocolRequest.getParameters().get(0).getValue()));
         product.setName(protocolRequest.getParameters().get(1).getValue());
         product.setDescription(protocolRequest.getParameters().get(2).getValue());
-        String category=protocolRequest.getParameters().get(3).getValue();
+        product.setPrice(Double.parseDouble(protocolRequest.getParameters().get(3).getValue()));
+        product.setCategoryId(Long.valueOf(protocolRequest.getParameters().get(4).getValue()));
 
-        if(!category.isEmpty()){
-            product.setCategoryId(Long.valueOf(category));
-        }
+
 
         getProductService().createProduct(product);
 
@@ -212,7 +233,7 @@ public class OpenMarketHandler extends ServerHandler {
         Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
         Category category = getCategoryService().findById(id);
         if (category == null) {
-            return generateNotFoundErrorJson();
+            return generateNotFoundErrorJson(Context.CATEGORY);
         } else {
             return objectToJSON(category);
         }
@@ -229,7 +250,7 @@ public class OpenMarketHandler extends ServerHandler {
         Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
         Category category = getCategoryService().findById(id);
         if (category == null) {
-            return generateNotFoundErrorJson();
+            return generateNotFoundErrorJson(Context.CATEGORY);
         }
 
         category = new Category();
@@ -245,7 +266,7 @@ public class OpenMarketHandler extends ServerHandler {
         Category category= getCategoryService().findById(id);
 
         if(!(category == null)){
-            return generateBadRequestJson("category");
+            return generateBadRequestJson(Context.CATEGORY);
         }
 
          category = new Category();
@@ -261,37 +282,35 @@ public class OpenMarketHandler extends ServerHandler {
      *
      * @return error en formato json
      */
-    private String generateNotFoundErrorJson() {
-        List<JsonError> errors = new ArrayList<>();
-        JsonError error = new JsonError();
-        error.setCode("404");
-        error.setError("NOT_FOUND");
-        error.setMessage("Producto no encontrado. Id no existe");
-        errors.add(error);
 
-        Gson gson = new Gson();
 
-        return gson.toJson(errors);
-    }
 
-    private String generateBadRequestJson(String context) {
-        List<JsonError> errors = new ArrayList<>();
-        JsonError error = new JsonError();
-        error.setCode("400");
-        error.setError("BAD_REQUEST");
 
-        if(Objects.equals(context, "product")){
-            error.setMessage("Error, un producto con ese id ya existe");
-        }else{
-            error.setMessage("Error, una categoria con ese id ya existe");
+    private String generateNotFoundErrorJson(Context context) {
+        String message;
+            switch (context) {
+            case PRODUCT -> message="Error, un producto con ese id no existe";
+            case CATEGORY ->message= "Error, una categoria con ese id no existe";
+            // Añade más casos aquí en el futuro
+            default -> throw new IllegalArgumentException("Contexto desconocido: " + context);
         }
-        errors.add(error);
 
-        Gson gson = new Gson();
-
-        return gson.toJson(errors);
+        return new ErrorResponse("404", "NOT_FOUND", message).toJson();
     }
 
+
+    private String generateBadRequestJson(Context context) {
+        String message;
+        switch (context) {
+            case PRODUCT -> message = "Error, un producto con ese id ya existe";
+            case CATEGORY -> message = "Error, una categoria con ese id ya existe";
+
+            default -> throw new IllegalArgumentException("Contexto desconocido: " + context);
+        }
+
+
+        return new ErrorResponse("400", "BAD_REQUEST", message).toJson();
+    }
 
 
     public CategoryService getCategoryService() {

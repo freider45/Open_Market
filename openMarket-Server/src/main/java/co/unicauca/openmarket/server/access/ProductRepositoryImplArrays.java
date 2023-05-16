@@ -30,10 +30,10 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
 
     public void inicializar() {
 //        customers.add(new Customer("98000010", "Alexander", "Ponce Yepes", "Calle 12 No 12-12 Popayan", "3154575845", "fer@hotmail.com", "Masculino"));
-        products.add(new Product(1L, "Leche", "rica", 1200));
-        products.add(new Product(2L, "Tamal", "Valluno", 4000));
-        products.add(new Product(3L, "Atun", "De pescado", 12000));
-        products.add(new Product(4L, "Zanahoria", "1 libra", 10000));
+        products.add(new Product(1L, "Leche", "rica", 1200,1L));
+        products.add(new Product(2L, "Tamal", "Valluno", 4000,1L));
+        products.add(new Product(3L, "Atun", "De pescado", 12000,1L));
+        products.add(new Product(4L, "Zanahoria", "1 libra", 10000,1L));
     }
 
 
@@ -47,10 +47,10 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
     public boolean edit(Long id, Product product) {
       Product productToEdit=findById(id);
       productToEdit.setName(product.getName());
+      productToEdit.setPrice(product.getPrice());
        productToEdit.setDescription(product.getDescription());
-       if(!(product.getCategoryId()==null)){
-             productToEdit.setCategoryId(product.getCategoryId());
-       }
+       productToEdit.setCategoryId(product.getCategoryId());
+
      
       return true;
     }
@@ -94,7 +94,7 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
     public List<Product> findByCategory(String categoryName) {
        List<Product> listaProductos = new ArrayList<>();
          for (Product product : products) {
-            if (product.getCategoryId().equals(categoryName)) {
+            if (product.getCategoryId().toString().equals(categoryName)) {
                 listaProductos.add(product);
             }
         }
