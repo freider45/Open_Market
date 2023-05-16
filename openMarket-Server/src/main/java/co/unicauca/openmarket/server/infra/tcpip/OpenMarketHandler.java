@@ -202,6 +202,12 @@ public class OpenMarketHandler extends ServerHandler {
         return objectToJSON(product);
     }
 
+    private String processGetListCategoryByName(Protocol protocolRequest) {
+        String name = protocolRequest.getParameters().get(0).getValue();
+        List<Category> categories;
+        categories = getCategoryService().findByName(name);
+        return objectToJSON(categories);
+    }
     private String processGetCategory(Protocol protocolRequest) {
         Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());
         Category category = getCategoryService().findById(id);
@@ -211,14 +217,6 @@ public class OpenMarketHandler extends ServerHandler {
             return objectToJSON(category);
         }
     }
-
-    private String processGetListCategoryByName(Protocol protocolRequest) {
-        String name = protocolRequest.getParameters().get(0).getValue();
-        List<Category> categories;
-        categories = getCategoryService().findByName(name);
-        return objectToJSON(categories);
-    }
-
     private String processDeleteCategory(Protocol protocolRequest) {
         // Eliminar una categoria
         Long id = Long.valueOf(protocolRequest.getParameters().get(0).getValue());

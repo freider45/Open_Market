@@ -9,6 +9,7 @@ import co.unicauca.openmarket.client.domain.service.CategoryService;
 import co.unicauca.openmarket.commons.domain.Product;
 import co.unicauca.openmarket.client.domain.service.ProductService;
 import co.unicauca.openmarket.commons.domain.Category;
+import co.unicauca.openmarket.commons.domain.Observer;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Libardo Pantoja
  */
-public class GUIProductsFind extends javax.swing.JDialog {
+public class GUIProductsFind extends javax.swing.JDialog implements Observer{
 
     private ProductService productService;
     private CategoryService categoryService;
@@ -54,7 +55,7 @@ public class GUIProductsFind extends javax.swing.JDialog {
             rowData[0] = listProducts.get(i).getProductId();
             rowData[1] = listProducts.get(i).getName();
             rowData[2] = listProducts.get(i).getDescription();
-                  if ((listProducts.get(i).getCategoryId())!=null) {
+            if ((listProducts.get(i).getCategoryId())!=null) {
                  Long catId=listProducts.get(i).getCategoryId();
                 String catName= categoryService.findCategoryById(catId).getName();
                 rowData[3] = catName;
@@ -306,4 +307,13 @@ public class GUIProductsFind extends javax.swing.JDialog {
     private javax.swing.JTable tblProducts;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update() {
+        try {
+            fillTable(productService.findAllProducts());
+        } catch (Exception ex) {
+            Logger.getLogger(GUIProductsFind.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

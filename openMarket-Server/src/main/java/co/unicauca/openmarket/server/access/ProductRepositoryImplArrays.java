@@ -48,7 +48,7 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
       Product productToEdit=findById(id);
       productToEdit.setName(product.getName());
        productToEdit.setDescription(product.getDescription());
-       if(!product.getCategoryId().toString().isEmpty()){
+       if(!(product.getCategoryId()==null)){
              productToEdit.setCategoryId(product.getCategoryId());
        }
      

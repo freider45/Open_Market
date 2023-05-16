@@ -39,7 +39,7 @@ public class ProductService {
         // Validaciones y reglas de negocio
         if (product.getProductId()==null || product.getDescription().isEmpty()
                 || product.getName().isEmpty()) {
-            errors.add(new JsonError("400", "BAD_REQUEST","id, nombres, apellidos, email y género son obligatorios. "));
+            errors.add(new JsonError("400", "BAD_REQUEST","id, descripcion, name,  son obligatorios. "));
         }
 
         // Que no esté repetido

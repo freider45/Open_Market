@@ -11,7 +11,7 @@ import java.util.List;
  * @author Libardo, Julio
  */
 public interface IProductAccess {
-    boolean save(Product newProduct,Long categoryId) throws Exception;
+    boolean save(Product newProduct) throws Exception;
     
     boolean edit(Long id, Product product) throws Exception;
     

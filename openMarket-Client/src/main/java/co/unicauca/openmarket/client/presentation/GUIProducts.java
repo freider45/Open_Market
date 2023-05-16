@@ -289,6 +289,8 @@ public class GUIProducts extends javax.swing.JFrame {
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         GUIProductsFind instance = new GUIProductsFind(this, false, productService, categoryService);
+        productService.registerObserver(instance);
+        categoryService.registerObserver(instance);
         instance.setVisible(true);
     }//GEN-LAST:event_btnFindActionPerformed
 
@@ -426,6 +428,7 @@ public class GUIProducts extends javax.swing.JFrame {
         }
     }
 
+
     private void editProduct() throws Exception {
         String id = txtId.getText().trim();
         if (id.equals("")) {
@@ -436,12 +439,8 @@ public class GUIProducts extends javax.swing.JFrame {
         Long productId = Long.valueOf(id);
 
         Product prod = productService.findProductById(productId);
-        System.out.println("co.unicauca.openmarket.client.presentation.GUIProducts.editProduct()");
-        System.out.println(prod.getDescription());
-        if (prod == null) {
-            Messages.showMessageDialog("El producto con el id " + id + " no existe", "Atención");
-            return;
-        }
+     
+       
         if (!txtName.getText().isEmpty()) {
             prod.setName(txtName.getText().trim());
         }
@@ -461,7 +460,6 @@ public class GUIProducts extends javax.swing.JFrame {
                 System.out.println(e.getMessage());
                 return;
             }
-            prod.setCategoryId(Long.valueOf(txtCategory.getText()));
         }
 
         if (productService.editProduct(productId, prod)) {

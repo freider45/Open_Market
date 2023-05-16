@@ -39,10 +39,10 @@ public class ProductAccessImplSockets implements IProductAccess {
      * @throws Exception error crear el producto
      */
     @Override
-    public boolean save(Product newProduct, Long categoryId) throws Exception {
+    public boolean save (Product newProduct)throws Exception {
         boolean bandera = false;
         String jsonResponse = null;
-        String requestJson = doCreateProductRequestJson(newProduct, categoryId);
+        String requestJson = doCreateProductRequestJson(newProduct);
         try {
             mySocket.connect();
             jsonResponse = mySocket.sendRequest(requestJson);
@@ -327,15 +327,16 @@ public class ProductAccessImplSockets implements IProductAccess {
      * @return devulve algo como:
      * {"resource":"product","action":"post","parameters":[{"name":"productId","value":"1"},{"name":"name","value":"Leche"},...}]}
      */
-    private String doCreateProductRequestJson(Product product, Long categoryId) {
-
+    private String doCreateProductRequestJson(Product product) {
         Protocol protocol = new Protocol();
         protocol.setResource("product");
         protocol.setAction("post");
         protocol.addParameter("productId", product.getProductId().toString());
         protocol.addParameter("name", product.getName());
         protocol.addParameter("description", product.getDescription());
-        protocol.addParameter("categoryId", product.getCategoryId().toString());
+        if(product.getCategoryId()!=null){
+            protocol.addParameter("categoryId", product.getCategoryId().toString());
+        }
 
         Gson gson = new Gson();
         String requestJson = gson.toJson(protocol);
