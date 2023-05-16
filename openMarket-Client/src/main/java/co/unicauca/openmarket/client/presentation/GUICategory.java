@@ -415,9 +415,10 @@ public class GUICategory extends javax.swing.JFrame {
     //editar categorias
     private void editCategory() throws Exception {
         String id=this.txtId.getText().trim();
-        Long categoryId=Long.parseLong(id);
+        Long categoryId=Long.valueOf(id);
         Category cat=new Category();
         cat.setName(this.txtNombre.getText().trim());
+        cat.setCategoryId(categoryId);
         if(categoryService.editCategory(categoryId,cat)){
             Messages.showMessageDialog("Se editó con éxito", "Atención");
             cleanControls();
