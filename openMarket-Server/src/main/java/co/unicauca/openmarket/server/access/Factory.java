@@ -29,12 +29,6 @@ public class Factory {
 
     }
 
-    /**
-     * Método que crea una instancia concreta de la jerarquia IProductRepository
-     *
-     * @param type cadena que indica qué tipo de clase hija debe instanciar
-     * @return una clase hija de la abstracción IProductRepository
-     */
 
     public IProductRepository getRepository() {
         String type = Utilities.loadProperty("product.repository");
@@ -45,7 +39,7 @@ public class Factory {
 
         switch (type) {
             case "default":
-                result = new ProductRepositoryImplArrays();
+                result = new ProductRepositoryImplArrays(getCatRepository());
                 break;
             case "mysql":
                 result = new ProductRepositoryImplMysql();

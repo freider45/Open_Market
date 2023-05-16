@@ -70,7 +70,7 @@ public class ProductService {
     public synchronized List<Product> findAll(){
         return repo.findAll();
     };
-    public synchronized List<Product> findByCategory(String categoryName){
+    public  List<Product> findByCategory(String categoryName){
         return repo.findByCategory(categoryName);
     };
     public synchronized List<Product> findByName(String name){

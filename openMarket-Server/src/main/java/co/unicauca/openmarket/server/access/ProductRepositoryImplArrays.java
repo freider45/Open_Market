@@ -5,6 +5,9 @@ import co.unicauca.openmarket.server.domain.services.CategoryService;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -19,12 +22,14 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
      */
     private static List<Product> products;
     private Connection conn;
-    private CategoryService categoryService;
+    private ICategoryRepository categoryService;
 
-    public ProductRepositoryImplArrays() {
+    public ProductRepositoryImplArrays(ICategoryRepository catRepo) {
+        this.categoryService=catRepo;
         if (products == null) {
             products = new ArrayList<>();
         }
+
         
         if (products.isEmpty()) {
             inicializar();
@@ -32,7 +37,6 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
     }
 
     public void inicializar() {
-//        customers.add(new Customer("98000010", "Alexander", "Ponce Yepes", "Calle 12 No 12-12 Popayan", "3154575845", "fer@hotmail.com", "Masculino"));
         products.add(new Product(1L, "Leche", "rica", 1200,1L));
         products.add(new Product(2L, "Tamal", "Valluno", 4000,1L));
         products.add(new Product(3L, "Atun", "De pescado", 12000,1L));
@@ -95,15 +99,21 @@ public final class ProductRepositoryImplArrays implements IProductRepository {
 
     @Override
     public List<Product> findByCategory(String categoryName) {
-       List<Product> listaProductos = new ArrayList<>();
-         for (Product product : products) {
-             Category cat = categoryService.findById(product.getCategoryId());
-             String catName=cat.getName();
-            if (catName.equals(categoryName)) {
-                listaProductos.add(product);
-            }
+        try {
+            List<Category> allCategories = this.categoryService.findAll();
+
+            Map<Long, Category> categoryMap = allCategories.stream()
+                    .collect(Collectors.toMap(Category::getCategoryId, Function.identity()));
+
+            // Ahora puedes buscar las categorías por id en la memoria
+            return products.stream()
+                    .filter(product -> categoryName.equals(categoryMap.get(product.getCategoryId()).getName()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            // maneja la excepción
+            e.printStackTrace();
         }
-        return listaProductos;
+        return new ArrayList<>();
     }
 
     @Override
