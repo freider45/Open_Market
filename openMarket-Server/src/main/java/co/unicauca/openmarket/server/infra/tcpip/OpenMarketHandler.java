@@ -191,7 +191,7 @@ public class OpenMarketHandler extends ServerHandler {
         product.setProductId(Long.valueOf(protocolRequest.getParameters().get(0).getValue()));
         product.setName(protocolRequest.getParameters().get(1).getValue());
         product.setDescription(protocolRequest.getParameters().get(2).getValue());
-        String category=protocolRequest.getParameters().get(2).getValue();
+        String category=protocolRequest.getParameters().get(3).getValue();
 
         if(!category.isEmpty()){
             product.setCategoryId(Long.valueOf(category));

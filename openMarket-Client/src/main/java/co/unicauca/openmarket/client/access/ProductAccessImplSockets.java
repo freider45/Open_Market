@@ -406,10 +406,10 @@ public class ProductAccessImplSockets implements IProductAccess {
         return requestJson;
     }
 
+
     /**
-     * Crea una solicitud json de busqueda por nombre del producto para ser
-     * enviada por el socket
-     *
+     * Convierte jsonProduct, proveniente del server socket, de json a un
+     * objeto Product
      *
      * @param pname nombre del producto
      * @return solicitud de consulta del producto en formato Json, algo como:

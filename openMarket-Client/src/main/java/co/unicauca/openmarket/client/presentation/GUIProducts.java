@@ -22,10 +22,10 @@ public class GUIProducts extends javax.swing.JFrame {
     /**
      * Creates new form GUIProducts
      */
-    public GUIProducts(ProductService productService,CategoryService categoryService ) {
+    public GUIProducts(ProductService productService, CategoryService categoryService) {
         initComponents();
         this.productService = productService;
-        this.categoryService=categoryService;
+        this.categoryService = categoryService;
         stateInitial();
 
     }
@@ -233,18 +233,18 @@ public class GUIProducts extends javax.swing.JFrame {
             txtName.requestFocus();
             return;
         }
-        if (addOption) {
-            try {
-                //Agregar
-                addProduct();
-            } catch(Exception e){
-           
-              JOptionPane.showMessageDialog(null,
-                e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+
+        try {
+            //Agregar
+            addProduct();
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
         }
-        } 
 
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -255,42 +255,40 @@ public class GUIProducts extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-   try {
-        String id = txtId.getText().trim();
-        if (id.equals("")) {
-            Messages.showMessageDialog("Debe buscar el producto a eliminar", "Atención");
-            txtId.requestFocus();
-            return;
-        }
-        Long productId = Long.valueOf(id);
-        if (Messages.showConfirmDialog("Está seguro que desea eliminar este producto?", "Confirmación") == JOptionPane.YES_NO_OPTION) {
+        try {
+            String id = txtId.getText().trim();
+            if (id.equals("")) {
+                Messages.showMessageDialog("Debe buscar el producto a eliminar", "Atención");
+                txtId.requestFocus();
+                return;
+            }
+            Long productId = Long.valueOf(id);
+            if (Messages.showConfirmDialog("Está seguro que desea eliminar este producto?", "Confirmación") == JOptionPane.YES_NO_OPTION) {
 
-         
                 if (productService.deleteProduct(productId)) {
                     Messages.showMessageDialog("Producto eliminado con éxito", "Atención");
                     stateInitial();
                     cleanControls();
                 }
 
-        }
-   }
-        catch(NumberFormatException e){
-                   JOptionPane.showMessageDialog(null,
-                "El id debe ser un numero",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-          
-          } catch(Exception e){
-           
-              JOptionPane.showMessageDialog(null,
-                e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "El id debe ser un numero",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
-        GUIProductsFind instance = new GUIProductsFind(this, true, productService,categoryService);
+        GUIProductsFind instance = new GUIProductsFind(this, true, productService, categoryService);
         instance.setVisible(true);
     }//GEN-LAST:event_btnFindActionPerformed
 
@@ -314,17 +312,14 @@ public class GUIProducts extends javax.swing.JFrame {
             }
             //Editar
             editProduct();
-        }catch(Exception e){
-           
-              JOptionPane.showMessageDialog(null,
-                e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
-        
-           
-            
-        
+
 
     }//GEN-LAST:event_btnTerminarEdicionActionPerformed
     private void stateEdit() {
@@ -422,12 +417,12 @@ public class GUIProducts extends javax.swing.JFrame {
             } else {
                 Messages.showMessageDialog("Error al grabar, lo siento mucho", "Atención");
             }
-        } catch(Exception e){
-           
-              JOptionPane.showMessageDialog(null,
-                e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -455,14 +450,14 @@ public class GUIProducts extends javax.swing.JFrame {
         }
         if (!txtCategory.getText().isEmpty()) {
             try {
-             Category cat=   this.categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
+                Category cat = this.categoryService.findCategoryById(Long.valueOf(txtCategory.getText()));
                 prod.setCategoryId(cat.getCategoryId());
             } catch (Exception e) {
-                  JOptionPane.showMessageDialog(null,
-                e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-                 prod=null;
+                JOptionPane.showMessageDialog(null,
+                        e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                prod = null;
                 System.out.println(e.getMessage());
                 return;
             }
