@@ -4,6 +4,9 @@
 - Freider Escobar
 - Juan Camilo Sarabino
 
+[Patrones de arquitectura](https://github.com/freider45/Open_Market/blob/main/Patrones%20de%20arquitectura.pdf)
+
+
 # Diagramas UML
 ## Servidor
 
