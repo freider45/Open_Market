@@ -6,6 +6,8 @@
 
 [Patrones de arquitectura](https://github.com/freider45/Open_Market/blob/main/Patrones%20de%20arquitectura.pdf)
 
+[Enlace video conexion servidor y cliente](https://drive.google.com/file/d/1zGEQ760WbkJzRHtpdi5w3q2pcbep3vZH/view?usp=share_link)
+
 
 # Diagramas UML
 ## Servidor
